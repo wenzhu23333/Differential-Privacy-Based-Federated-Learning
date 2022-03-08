@@ -159,7 +159,7 @@ if __name__ == '__main__':
     rootpath = './log'
     if not os.path.exists(rootpath):
         os.makedirs(rootpath)
-    accfile = open(rootpath + '/accfile_fed_{}_{}_{}_iid{}_dp{}_epsilon{}.dat'.
+    accfile = open(rootpath + '/accfile_fed_{}_{}_{}_iid{}_dp_{}_epsilon_{}.dat'.
                    format(args.dataset, args.model, args.epochs, args.iid,
                           args.dp_mechanism, args.dp_epsilon), "w")
 
@@ -173,7 +173,7 @@ if __name__ == '__main__':
     plt.figure()
     plt.plot(range(len(acc_test)), acc_test)
     plt.ylabel('test accuracy')
-    plt.savefig(rootpath + '/fed_{}_{}_{}_C{}_iid{}_dp{}_epsilon{}_acc.png'.format(
+    plt.savefig(rootpath + '/fed_{}_{}_{}_C{}_iid{}_dp_{}_epsilon_{}_acc.png'.format(
         args.dataset, args.model, args.epochs, args.frac, args.iid, args.dp_mechanism, args.dp_epsilon))
 
 
