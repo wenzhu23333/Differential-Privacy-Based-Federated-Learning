@@ -122,6 +122,8 @@ if __name__ == '__main__':
     # copy weights
     w_glob = net_glob.state_dict()
 
+    all_clients = list(range(args.num_users))
+
     # training
     acc_test = []
     learning_rate = [args.lr for i in range(args.num_users)]
@@ -129,6 +131,9 @@ if __name__ == '__main__':
         w_locals, loss_locals = [], []
         m = max(int(args.frac * args.num_users), 1)
         idxs_users = np.random.choice(range(args.num_users), m, replace=False)
+        begin_index = iter % (1 / args.frac)
+        idxs_clients = all_clients[int(begin_index * args.num_users * args.frac):
+                                   int((begin_index + 1) * args.num_users * args.frac)]
         for idx in idxs_users:
             args.lr = learning_rate[idx]
             local = LocalUpdate(args=args, dataset=dataset_train, idxs=dict_users[idx],
