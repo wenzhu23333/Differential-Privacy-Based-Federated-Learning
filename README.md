@@ -27,6 +27,13 @@ Important note: The number of FL local update rounds used in this code is all 1,
 
 **DP Clip**: In DP-based FL, we usually clip the gradients in training and the clip is an important parameter to calculate the sensitivity.
 
+### No DP
+
+You can run like this:
+
+python main.py --dataset mnist --iid --model cnn --epochs 50 --dp_mechanism no_dp
+
+
 ### Laplace Mechanism
 
 This code is based on Simple Composition in DP. In other words, if a client's privacy budget is $\epsilon$ and the client is selected $T$ times, the client's budget for each noising is $\epsilon / T$.
@@ -45,7 +52,7 @@ The same as Laplace Mechanism.
 
 You can run like this:
 
-python main.py --dataset mnist --iid --model cnn --epochs 50 --dp_mechanism Gaussain --dp_epsilon 10 --dp_delta 1e-5 --dp_clip 10
+python main.py --dataset mnist --iid --model cnn --epochs 50 --dp_mechanism Gaussian --dp_epsilon 10 --dp_delta 1e-5 --dp_clip 10
 
 #### Moments Accountant
 
