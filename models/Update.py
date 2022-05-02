@@ -66,7 +66,7 @@ class LocalUpdate(object):
         return net.state_dict(), sum(epoch_loss) / len(epoch_loss), scheduler.get_last_lr()[0]
 
     def clip_gradients(self, net):
-        if self.dp_mechanism != 'Laplace':
+        if self.dp_mechanism == 'Laplace':
             # Laplace use 1 norm
             for k, v in net.named_parameters():
                 v.grad /= max(1, v.grad.norm(1) / self.dp_clip)
