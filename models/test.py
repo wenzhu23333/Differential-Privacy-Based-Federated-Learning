@@ -1,14 +1,9 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# @python: 3.6
-
 import torch
-from torch import nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
 
-def test_img(net_g, datatest, args):
+def test_fun(net_g, datatest, args):
     net_g.eval()
     # testing
     test_loss = 0
@@ -17,7 +12,7 @@ def test_img(net_g, datatest, args):
     l = len(data_loader)
     for idx, (data, target) in enumerate(data_loader):
         if torch.cuda.is_available() and args.gpu != -1:
-            data, target = data.cuda(args.device), target.cuda(args.device)
+            data, target = data.cuda(), target.cuda()
         else:
             data, target = data.cpu(), target.cpu()
         log_probs = net_g(data)
@@ -30,4 +25,3 @@ def test_img(net_g, datatest, args):
     test_loss /= len(data_loader.dataset)
     accuracy = 100.00 * correct / len(data_loader.dataset)
     return accuracy, test_loss
-
