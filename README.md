@@ -81,3 +81,8 @@ To do...
   - Liu, Ruixuan, et al. "Fedsel: Federated sgd under local differential privacy with top-k dimension selection." *International Conference on Database Systems for Advanced Applications*. Springer, Cham, 2020.
   - Truex, Stacey, et al. "LDP-Fed: Federated learning with local differential privacy." *Proceedings of the Third ACM International Workshop on Edge Systems, Analytics and Networking*. 2020.
   - Zhao, Yang, et al. "Local differential privacy-based federated learning for internet of things." *IEEE Internet of Things Journal* 8.11 (2020): 8836-8853.
+  
+
+## Remark
+FL-DP Version 2.0(Beta): Using opacus to clip per sample gradient and rewrite code.
+Dev分支发布的版本使用了Opacus进行Per Sample Gradient Clip。
