@@ -29,7 +29,9 @@ Important note: The number of FL local update rounds used in this code is all 1,
 
 ### Example Mnist Gaussian Mechanism
 
-bash run.sh
+Experiments: bash run.sh
+
+Drawing: python3 draw.py
 
 ![Mnist](mnist_gaussian.png)
 
