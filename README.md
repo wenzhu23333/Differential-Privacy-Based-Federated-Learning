@@ -31,7 +31,7 @@ Important note: The number of FL local update rounds used in this code is all 1,
 
 bash run.sh
 
-![avatar](mnist_gaussian.png)
+![Mnist](mnist_gaussian.png)
 
 ### No DP
 
