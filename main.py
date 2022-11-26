@@ -18,7 +18,7 @@ from models.Nets import MLP, CNNMnist, CNNCifar, CNNFemnist, CharLSTM
 from models.Fed import FedAvg
 from models.test import test_img
 from utils.dataset import FEMNIST, ShakeSpeare
-
+from opacus.grad_sample import GradSampleModule
 
 if __name__ == '__main__':
     # parse args
@@ -116,6 +116,8 @@ if __name__ == '__main__':
     dp_mechanism = args.dp_mechanism
     dp_clip = args.dp_clip
 
+    # use opacus to wrap model to clip per sample gradient
+    net_glob = GradSampleModule(net_glob)
     print(net_glob)
     net_glob.train()
 
@@ -130,9 +132,9 @@ if __name__ == '__main__':
     for iter in range(args.epochs):
         w_locals, loss_locals = [], []
         m = max(int(args.frac * args.num_users), 1)
-        idxs_users = np.random.choice(range(args.num_users), m, replace=False)
+        # idxs_users = np.random.choice(range(args.num_users), m, replace=False)
         begin_index = iter % (1 / args.frac)
-        idxs_clients = all_clients[int(begin_index * args.num_users * args.frac):
+        idxs_users = all_clients[int(begin_index * args.num_users * args.frac):
                                    int((begin_index + 1) * args.num_users * args.frac)]
         for idx in idxs_users:
             args.lr = learning_rate[idx]

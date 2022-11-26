@@ -37,20 +37,13 @@ def mnist_iid(dataset, num_users):
     :param num_users:
     :return: dict of image index
     """
-    filePath = '../data/mnist_iid_{}clients.dat'.format(num_users)
     dict_users = {}
-    try:
-        dict_users = openSamplingFile(filePath)
-    except FileNotFoundError:
-        num_items = int(len(dataset) / num_users)
-        all_idxs = [i for i in range(len(dataset))]
-        for i in range(num_users):
-            dict_users[i] = set(np.random.choice(all_idxs, num_items, replace=False))
-            all_idxs = list(set(all_idxs) - dict_users[i])
-    if dict_users == {}:
-        return "Error"
+    num_items = int(len(dataset) / num_users)
+    all_idxs = [i for i in range(len(dataset))]
+    for i in range(num_users):
+        dict_users[i] = set(np.random.choice(all_idxs, num_items, replace=False))
+        all_idxs = list(set(all_idxs) - dict_users[i])
     return dict_users
-
 
 def mnist_noniid(dataset, num_users):
     """
@@ -59,32 +52,25 @@ def mnist_noniid(dataset, num_users):
     :param num_users:
     :return:
     """
-    filePath = '../data/mnist_noniid_{}clients.dat'.format(num_users)
     dict_users = {}
-    try:
-        dict_users = openSamplingFile(filePath)
-    except FileNotFoundError:
-        num_shards, num_imgs = num_users * 2, int(len(dataset) / (num_users * 2))
-        idx_shard = [i for i in range(num_shards)]
-        dict_users = {i: np.array([], dtype='int64') for i in range(num_users)}
-        idxs = np.arange(num_shards * num_imgs)
-        labels = dataset.train_labels.numpy()
+    num_shards, num_imgs = num_users * 2, int(len(dataset) / (num_users * 2))
+    idx_shard = [i for i in range(num_shards)]
+    dict_users = {i: np.array([], dtype='int64') for i in range(num_users)}
+    idxs = np.arange(num_shards * num_imgs)
+    labels = dataset.train_labels.numpy()
 
-        # sort labels
-        idxs_labels = np.vstack((idxs, labels))
-        idxs_labels = idxs_labels[:, idxs_labels[1, :].argsort()]
-        idxs = idxs_labels[0, :]
+    # sort labels
+    idxs_labels = np.vstack((idxs, labels))
+    idxs_labels = idxs_labels[:, idxs_labels[1, :].argsort()]
+    idxs = idxs_labels[0, :]
 
-        # divide and assign
-        for i in range(num_users):
-            rand_set = set(np.random.choice(idx_shard, 2, replace=False))
-            idx_shard = list(set(idx_shard) - rand_set)
-            for rand in rand_set:
-                dict_users[i] = np.concatenate((dict_users[i], idxs[rand * num_imgs:(rand + 1) * num_imgs]), axis=0)
-    if dict_users == {}:
-        return "Error"
+    # divide and assign
+    for i in range(num_users):
+        rand_set = set(np.random.choice(idx_shard, 2, replace=False))
+        idx_shard = list(set(idx_shard) - rand_set)
+        for rand in rand_set:
+            dict_users[i] = np.concatenate((dict_users[i], idxs[rand * num_imgs:(rand + 1) * num_imgs]), axis=0)
     return dict_users
-
 
 def fashion_iid(dataset, num_users):
     """
@@ -93,20 +79,13 @@ def fashion_iid(dataset, num_users):
     :param num_users:
     :return: dict of image index
     """
-    filePath = '../data/fashion_iid_{}clients.dat'.format(num_users)
     dict_users = {}
-    try:
-        dict_users = openSamplingFile(filePath)
-    except FileNotFoundError:
-        num_items = int(len(dataset) / num_users)
-        all_idxs = [i for i in range(len(dataset))]
-        for i in range(num_users):
-            dict_users[i] = set(np.random.choice(all_idxs, num_items, replace=False))
-            all_idxs = list(set(all_idxs) - dict_users[i])
-    if dict_users == {}:
-        return "Error"
+    num_items = int(len(dataset) / num_users)
+    all_idxs = [i for i in range(len(dataset))]
+    for i in range(num_users):
+        dict_users[i] = set(np.random.choice(all_idxs, num_items, replace=False))
+        all_idxs = list(set(all_idxs) - dict_users[i])
     return dict_users
-
 
 def fashion_noniid(dataset, num_users):
     """
@@ -115,33 +94,24 @@ def fashion_noniid(dataset, num_users):
     :param num_users:
     :return:
     """
-    filePath = '../data/fashion_noniid_{}clients.dat'.format(num_users)
-    dict_users = {}
-    try:
-        dict_users = openSamplingFile(filePath)
-    except FileNotFoundError:
-        num_shards, num_imgs = num_users * 2, int(len(dataset) / (num_users * 2))
-        idx_shard = [i for i in range(num_shards)]
-        dict_users = {i: np.array([], dtype='int64') for i in range(num_users)}
-        idxs = np.arange(num_shards * num_imgs)
-        labels = dataset.train_labels.numpy()
+    num_shards, num_imgs = num_users * 2, int(len(dataset) / (num_users * 2))
+    idx_shard = [i for i in range(num_shards)]
+    dict_users = {i: np.array([], dtype='int64') for i in range(num_users)}
+    idxs = np.arange(num_shards * num_imgs)
+    labels = dataset.train_labels.numpy()
 
-        # sort labels
-        idxs_labels = np.vstack((idxs, labels))
-        idxs_labels = idxs_labels[:, idxs_labels[1, :].argsort()]
-        idxs = idxs_labels[0, :]
+    # sort labels
+    idxs_labels = np.vstack((idxs, labels))
+    idxs_labels = idxs_labels[:, idxs_labels[1, :].argsort()]
+    idxs = idxs_labels[0, :]
 
-        # divide and assign
-        for i in range(num_users):
-            rand_set = set(np.random.choice(idx_shard, 2, replace=False))
-            idx_shard = list(set(idx_shard) - rand_set)
-            for rand in rand_set:
-                dict_users[i] = np.concatenate((dict_users[i], idxs[rand * num_imgs:(rand + 1) * num_imgs]), axis=0)
-
-    if dict_users == {}:
-        return "Error"
+    # divide and assign
+    for i in range(num_users):
+        rand_set = set(np.random.choice(idx_shard, 2, replace=False))
+        idx_shard = list(set(idx_shard) - rand_set)
+        for rand in rand_set:
+            dict_users[i] = np.concatenate((dict_users[i], idxs[rand * num_imgs:(rand + 1) * num_imgs]), axis=0)
     return dict_users
-
 
 def cifar_iid(dataset, num_users):
     """
@@ -150,18 +120,12 @@ def cifar_iid(dataset, num_users):
     :param num_users:
     :return: dict of image index
     """
-    filePath = '../data/cifar_iid_{}clients.dat'.format(num_users)
     dict_users = {}
-    try:
-        dict_users = openSamplingFile(filePath)
-    except FileNotFoundError:
-        num_items = int(len(dataset) / num_users)
-        dict_users, all_idxs = {}, [i for i in range(len(dataset))]
-        for i in range(num_users):
-            dict_users[i] = set(np.random.choice(all_idxs, num_items, replace=False))
-            all_idxs = list(set(all_idxs) - dict_users[i])
-    if dict_users == {}:
-        return "Error"
+    num_items = int(len(dataset) / num_users)
+    dict_users, all_idxs = {}, [i for i in range(len(dataset))]
+    for i in range(num_users):
+        dict_users[i] = set(np.random.choice(all_idxs, num_items, replace=False))
+        all_idxs = list(set(all_idxs) - dict_users[i])
     return dict_users
 
 def cifar_noniid(dataset, num_users):
@@ -171,30 +135,22 @@ def cifar_noniid(dataset, num_users):
     :param num_users:
     :return:
     """
-    filePath = '../data/cifar_noniid_{}clients.dat'.format(num_users)
-    dict_users = {}
-    try:
-        dict_users = openSamplingFile(filePath)
-    except FileNotFoundError:
-        num_shards, num_imgs = num_users * 2, int(len(dataset) / (num_users * 2))
-        idx_shard = [i for i in range(num_shards)]
-        dict_users = {i: np.array([], dtype='int64') for i in range(num_users)}
-        idxs = np.arange(num_shards * num_imgs)
-        # labels = dataset.train_labels.numpy()
-        labels = np.array(dataset.targets)
-        # sort labels
-        idxs_labels = np.vstack((idxs, labels))
-        idxs_labels = idxs_labels[:, idxs_labels[1, :].argsort()]
-        idxs = idxs_labels[0, :]
-        # divide and assign
-        for i in range(num_users):
-            rand_set = set(np.random.choice(idx_shard, 2, replace=False))
-            idx_shard = list(set(idx_shard) - rand_set)
-            for rand in rand_set:
-                dict_users[i] = np.concatenate(
-                    (dict_users[i], idxs[rand * num_imgs:(rand + 1) * num_imgs]), axis=0)
-    if dict_users == {}:
-        return "Error"
+    num_shards, num_imgs = num_users * 2, int(len(dataset) / (num_users * 2))
+    idx_shard = [i for i in range(num_shards)]
+    dict_users = {i: np.array([], dtype='int64') for i in range(num_users)}
+    idxs = np.arange(num_shards * num_imgs)
+    # labels = dataset.train_labels.numpy()
+    labels = np.array(dataset.targets)
+    # sort labels
+    idxs_labels = np.vstack((idxs, labels))
+    idxs_labels = idxs_labels[:, idxs_labels[1, :].argsort()]
+    idxs = idxs_labels[0, :]
+    # divide and assign
+    for i in range(num_users):
+        rand_set = set(np.random.choice(idx_shard, 2, replace=False))
+        idx_shard = list(set(idx_shard) - rand_set)
+        for rand in rand_set:
+            dict_users[i] = np.concatenate((dict_users[i], idxs[rand * num_imgs:(rand + 1) * num_imgs]), axis=0)
     return dict_users
 
 

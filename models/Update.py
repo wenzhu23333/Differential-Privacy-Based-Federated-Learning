@@ -49,31 +49,45 @@ class LocalUpdate(object):
                 images, labels = images.to(self.args.device), labels.to(self.args.device)
                 net.zero_grad()
                 log_probs = net(images)
-                # print(list(log_probs.size()))
-                # print(labels)
                 loss = self.loss_func(log_probs, labels)
                 loss.backward()
                 if self.dp_mechanism != 'no_dp':
-                    self.clip_gradients(net)
+                    self.clip_gradients(net, len(images))
                 optimizer.step()
                 scheduler.step()
+                # add noises to parameters
+                if self.dp_mechanism != 'no_dp':
+                    self.add_noise(net)
                 batch_loss.append(loss.item())
             epoch_loss.append(sum(batch_loss)/len(batch_loss))
 
-        # add noises to parameters
-        if self.dp_mechanism != 'no_dp':
-            self.add_noise(net)
         return net.state_dict(), sum(epoch_loss) / len(epoch_loss), scheduler.get_last_lr()[0]
 
-    def clip_gradients(self, net):
+    def clip_gradients(self, net, batch_size):
         if self.dp_mechanism == 'Laplace':
             # Laplace use 1 norm
-            for k, v in net.named_parameters():
-                v.grad /= max(1, v.grad.norm(1) / self.dp_clip)
+            self.perSampleClip(net, batch_size, self.args.device, self.dp_clip, norm=1)
         elif self.dp_mechanism == 'Gaussian':
             # Gaussian use 2 norm
-            for k, v in net.named_parameters():
-                v.grad /= max(1, v.grad.norm(2) / self.dp_clip)
+            self.perSampleClip(net, batch_size, self.args.device, self.dp_clip, norm=2)
+
+    def perSampleClip(self, net, batch_size, device, clipping, norm):
+        # per sample gradient clip by hand (using opacus)
+        grads = [param.grad_sample.detach().clone() for param in net.parameters()]
+        for idx in range(batch_size):
+            norm_sum = torch.tensor(0.0).to(device)
+            for i in range(len(grads)):
+                norm_sum += (torch.norm(grads[i][idx].to(torch.float32), p=norm) ** norm)
+            norm_sum = torch.pow(norm_sum, exponent=1 / norm)
+            for i in range(len(grads)):
+                grads[i][idx] = torch.div(grads[i][idx], torch.max(torch.tensor(1),
+                                                          torch.div(norm_sum, torch.tensor(clipping)))).to(device)
+        # average per sample gradient after clipping
+        for i in range(len(grads)):
+            grads[i] = torch.mean(grads[i], dim=0)
+        # set back gradient
+        for i, param in enumerate(net.parameters()):
+            param.grad = grads[i]
 
     def add_noise(self, net):
         sensitivity = cal_sensitivity(self.args.lr, self.dp_clip, len(self.idxs))

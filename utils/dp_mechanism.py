@@ -1,8 +1,8 @@
 import numpy as np
 
 def cal_sensitivity(lr, clip, dataset_size):
-#     return 2 * lr * clip / dataset_size
-    return 2 * lr * clip
+    return 2 * lr * clip / dataset_size
+#     return 2 * lr * clip
 
 def Laplace(epsilon, sensitivity, size):
     noise_scale = sensitivity / epsilon
