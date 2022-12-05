@@ -66,28 +66,26 @@ class LocalUpdate(object):
     def clip_gradients(self, net, batch_size):
         if self.dp_mechanism == 'Laplace':
             # Laplace use 1 norm
-            self.perSampleClip(net, batch_size, self.args.device, self.dp_clip, norm=1)
+            self.perSampleClip(net, self.dp_clip, norm=1)
         elif self.dp_mechanism == 'Gaussian':
             # Gaussian use 2 norm
-            self.perSampleClip(net, batch_size, self.args.device, self.dp_clip, norm=2)
+            self.perSampleClip(net, self.dp_clip, norm=2)
 
-    def perSampleClip(self, net, batch_size, device, clipping, norm):
-        # per sample gradient clip by hand (using opacus)
-        grads = [param.grad_sample.detach().clone() for param in net.parameters()]
-        for idx in range(batch_size):
-            norm_sum = torch.tensor(0.0).to(device)
-            for i in range(len(grads)):
-                norm_sum += (torch.norm(grads[i][idx].to(torch.float32), p=norm) ** norm)
-            norm_sum = torch.pow(norm_sum, exponent=1 / norm)
-            for i in range(len(grads)):
-                grads[i][idx] = torch.div(grads[i][idx], torch.max(torch.tensor(1),
-                                                          torch.div(norm_sum, torch.tensor(clipping)))).to(device)
-        # average per sample gradient after clipping
-        for i in range(len(grads)):
-            grads[i] = torch.mean(grads[i], dim=0)
-        # set back gradient
-        for i, param in enumerate(net.parameters()):
-            param.grad = grads[i]
+    def perSampleClip(self, net, clipping, norm):
+        grad_samples = [x.grad_sample for x in net.parameters()]
+        per_param_norms = [
+            g.reshape(len(g), -1).norm(norm, dim=-1) for g in grad_samples
+        ]
+        per_sample_norms = torch.stack(per_param_norms, dim=1).norm(norm, dim=1)
+        per_sample_clip_factor = (
+                clipping / (per_sample_norms + 1e-6)
+        ).clamp(max=1.0)
+        for factor, grad in zip(per_sample_clip_factor, grad_samples):
+            grad.detach().mul_(factor.to(grad.device))
+        # average per sample gradient after clipping and set back gradient
+        for param in net.parameters():
+            param.grad = param.grad_sample.detach().mean(dim=0)
+
 
     def add_noise(self, net):
         sensitivity = cal_sensitivity(self.args.lr, self.dp_clip, len(self.idxs))

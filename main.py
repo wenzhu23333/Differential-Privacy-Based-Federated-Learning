@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Python version: 3.6
+import random
 
 import matplotlib
 matplotlib.use('Agg')
@@ -22,10 +23,12 @@ from opacus.grad_sample import GradSampleModule
 
 if __name__ == '__main__':
     # parse args
+
+    random.seed(123)
+    np.random.seed(123)
     torch.manual_seed(123)
     torch.cuda.manual_seed_all(123)
     torch.cuda.manual_seed(123)
-    np.random.seed(123)
 
     args = args_parser()
     args.device = torch.device('cuda:{}'.format(args.gpu) if torch.cuda.is_available() and args.gpu != -1 else 'cpu')
