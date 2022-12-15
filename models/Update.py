@@ -78,7 +78,7 @@ class LocalUpdate(object):
         ]
         per_sample_norms = torch.stack(per_param_norms, dim=1).norm(norm, dim=1)
         per_sample_clip_factor = (
-                clipping / (per_sample_norms + 1e-6)
+            torch.div(clipping, (per_sample_norms + 1e-6))
         ).clamp(max=1.0)
         for factor, grad in zip(per_sample_clip_factor, grad_samples):
             grad.detach().mul_(factor.to(grad.device))
