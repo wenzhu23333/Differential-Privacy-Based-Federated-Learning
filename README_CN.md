@@ -6,7 +6,7 @@
       English
 </a>
 <span> | </span>
-<a href="https://github.com/marktext/marktext#development">
+<a href="https://github.com/wenzhu23333/Differential-Privacy-Based-Federated-Learning/blob/master/README_CN.md">
       Chinese
 </a>
 </h3>
