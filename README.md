@@ -1,8 +1,8 @@
-<h2 align="center">Differentially Private FL </h2> 
-
+<h1 align="center">Differentially Private FL </h1> 
+<br>
 <div align="center"> 
+<h3>
 Languages:
-
 <a href="https://github.com/wenzhu23333/Differential-Privacy-Based-Federated-Learning/blob/master/README.md">
       English
 </a>
@@ -10,9 +10,9 @@ Languages:
 <a href="https://github.com/marktext/marktext#development">
       Chinese
 </a>
-
+</h3>
 </div>
-
+<br>
 This repository collects related papers and corresponding codes on DP-based FL.
 
 ## Code
