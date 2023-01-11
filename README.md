@@ -1,5 +1,4 @@
-<h1 align="center">Differentially Private FL </h1> 
-<br>
+<h1 align="center">Differentially Private FL </h1>
 <div align="center"> 
 <h3>
 Languages:
@@ -12,7 +11,6 @@ Languages:
 </a>
 </h3>
 </div>
-<br>
 This repository collects related papers and corresponding codes on DP-based FL.
 
 ## Code

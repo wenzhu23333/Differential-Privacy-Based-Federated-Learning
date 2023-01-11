@@ -1,16 +1,15 @@
-<h2 align="center"> 基于差分隐私的联邦学习 </h2> 
-
+<h1 align="center">基于差分隐私的联邦学习</h1>
 <div align="center"> 
+<h3>
 语言:
-
 <a href="https://github.com/wenzhu23333/Differential-Privacy-Based-Federated-Learning/blob/master/README.md">
       English
 </a>
 <span> | </span>
-<a href="https://github.com/wenzhu23333/Differential-Privacy-Based-Federated-Learning/blob/master/README_CN.md">
+<a href="https://github.com/marktext/marktext#development">
       Chinese
 </a>
-
+</h3>
 </div>
 
 本仓库收集了基于差分隐私的联邦学习的相关论文、以及相应代码。
