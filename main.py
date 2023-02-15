@@ -16,7 +16,7 @@ from utils.sampling import mnist_iid, mnist_noniid, cifar_iid,cifar_noniid
 from utils.options import args_parser
 from models.Update import LocalUpdate
 from models.Nets import MLP, CNNMnist, CNNCifar, CNNFemnist, CharLSTM
-from models.Fed import FedAvg
+from models.Fed import FedAvg, FedWeightAvg
 from models.test import test_img
 from utils.dataset import FEMNIST, ShakeSpeare
 from opacus.grad_sample import GradSampleModule
@@ -133,7 +133,7 @@ if __name__ == '__main__':
     acc_test = []
     learning_rate = [args.lr for i in range(args.num_users)]
     for iter in range(args.epochs):
-        w_locals, loss_locals = [], []
+        w_locals, loss_locals, weight_locols = [], [], []
         m = max(int(args.frac * args.num_users), 1)
         # idxs_users = np.random.choice(range(args.num_users), m, replace=False)
         begin_index = iter % (1 / args.frac)
@@ -148,9 +148,10 @@ if __name__ == '__main__':
             learning_rate[idx] = curLR
             w_locals.append(copy.deepcopy(w))
             loss_locals.append(copy.deepcopy(loss))
+            weight_locols.append(len(dict_users[idx]))
 
         # update global weights
-        w_glob = FedAvg(w_locals)
+        w_glob = FedWeightAvg(w_locals, weight_locols)
         # copy weight to net_glob
         net_glob.load_state_dict(w_glob)
 
