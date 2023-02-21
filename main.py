@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # Python version: 3.6
 import random
+import time
 
 import matplotlib
 matplotlib.use('Agg')
@@ -133,6 +134,7 @@ if __name__ == '__main__':
     acc_test = []
     learning_rate = [args.lr for i in range(args.num_users)]
     for iter in range(args.epochs):
+        t_start = time.time()
         w_locals, loss_locals, weight_locols = [], [], []
         m = max(int(args.frac * args.num_users), 1)
         # idxs_users = np.random.choice(range(args.num_users), m, replace=False)
@@ -158,7 +160,8 @@ if __name__ == '__main__':
         # print accuracy
         net_glob.eval()
         acc_t, loss_t = test_img(net_glob, dataset_test, args)
-        print("Round {:3d},Testing accuracy: {:.2f}".format(iter, acc_t))
+        t_end = time.time()
+        print("Round {:3d},Testing accuracy: {:.2f},Time:  {:.2f}s".format(iter, acc_t, t_end - t_start))
 
         acc_test.append(acc_t.item())
 
