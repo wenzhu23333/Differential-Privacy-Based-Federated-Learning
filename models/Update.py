@@ -29,7 +29,7 @@ class LocalUpdate(object):
         self.args = args
         self.loss_func = nn.CrossEntropyLoss()
         self.selected_clients = []
-        self.ldr_train = DataLoader(DatasetSplit(dataset, idxs), batch_size=self.args.local_bs, shuffle=True)
+        self.ldr_train = DataLoader(DatasetSplit(dataset, idxs), batch_size=len(idxs), shuffle=True)
         self.dp_mechanism = dp_mechanism
         self.dp_epsilon = dp_epsilon
         self.dp_delta = dp_delta
@@ -42,26 +42,24 @@ class LocalUpdate(object):
         optimizer = torch.optim.SGD(net.parameters(), lr=self.args.lr, momentum=self.args.momentum)
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=self.args.lr_decay)
 
-        epoch_loss = []
-        for iter in range(self.args.local_ep):
-            batch_loss = []
-            for batch_idx, (images, labels) in enumerate(self.ldr_train):
-                images, labels = images.to(self.args.device), labels.to(self.args.device)
-                net.zero_grad()
-                log_probs = net(images)
-                loss = self.loss_func(log_probs, labels)
-                loss.backward()
-                if self.dp_mechanism != 'no_dp':
-                    self.clip_gradients(net, len(images))
-                optimizer.step()
-                scheduler.step()
-                # add noises to parameters
-                if self.dp_mechanism != 'no_dp':
-                    self.add_noise(net)
-                batch_loss.append(loss.item())
-            epoch_loss.append(sum(batch_loss)/len(batch_loss))
+        loss_client = 0
 
-        return net.state_dict(), sum(epoch_loss) / len(epoch_loss), scheduler.get_last_lr()[0]
+        for images, labels in self.ldr_train:
+            images, labels = images.to(self.args.device), labels.to(self.args.device)
+            net.zero_grad()
+            log_probs = net(images)
+            loss = self.loss_func(log_probs, labels)
+            loss.backward()
+            if self.dp_mechanism != 'no_dp':
+                self.clip_gradients(net, len(images))
+            optimizer.step()
+            scheduler.step()
+            # add noises to parameters
+            if self.dp_mechanism != 'no_dp':
+                self.add_noise(net)
+            loss_client = loss.item()
+
+        return net.state_dict(), loss_client, scheduler.get_last_lr()[0]
 
     def clip_gradients(self, net, batch_size):
         if self.dp_mechanism == 'Laplace':
