@@ -40,5 +40,8 @@ def args_parser():
     parser.add_argument('--dp_clip', type=float, default=10,
                         help='differential privacy clip')
 
+    parser.add_argument('--serial', action='store_true', help='partial serial running to save the gpu memory')
+    parser.add_argument('--serial_bs', type=int, default=128, help='partial serial running batch size')
+
     args = parser.parse_args()
     return args

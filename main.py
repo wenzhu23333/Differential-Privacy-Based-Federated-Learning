@@ -15,7 +15,7 @@ import os
 
 from utils.sampling import mnist_iid, mnist_noniid, cifar_iid,cifar_noniid
 from utils.options import args_parser
-from models.Update import LocalUpdate
+from models.Update import LocalUpdate, LocalUpdateSerial
 from models.Nets import MLP, CNNMnist, CNNCifar, CNNFemnist, CharLSTM
 from models.Fed import FedAvg, FedWeightAvg
 from models.test import test_img
@@ -143,9 +143,14 @@ if __name__ == '__main__':
                                    int((begin_index + 1) * args.num_users * args.frac)]
         for idx in idxs_users:
             args.lr = learning_rate[idx]
-            local = LocalUpdate(args=args, dataset=dataset_train, idxs=dict_users[idx],
-                                dp_epsilon=dp_epsilon, dp_delta=dp_delta,
-                                dp_mechanism=dp_mechanism, dp_clip=dp_clip)
+            if args.serial:
+                local = LocalUpdateSerial(args=args, dataset=dataset_train, idxs=dict_users[idx],
+                                          dp_epsilon=dp_epsilon, dp_delta=dp_delta,
+                                          dp_mechanism=dp_mechanism, dp_clip=dp_clip)
+            else:
+                local = LocalUpdate(args=args, dataset=dataset_train, idxs=dict_users[idx],
+                                    dp_epsilon=dp_epsilon, dp_delta=dp_delta,
+                                    dp_mechanism=dp_mechanism, dp_clip=dp_clip)
             w, loss, curLR = local.train(net=copy.deepcopy(net_glob).to(args.device))
             learning_rate[idx] = curLR
             w_locals.append(copy.deepcopy(w))
