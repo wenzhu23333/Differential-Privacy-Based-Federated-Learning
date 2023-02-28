@@ -103,4 +103,10 @@ To do...
 
 The new version uses [Opacus](https://opacus.ai/) for **Per Sample Gradient Clip**, which limits the norm of the gradient calculated by each sample.
 
+This code sets the number of local training rounds to 1, and the batch size is the local data set size of the client. 
+Since the training of the Opacus library will save the gradient of all samples, the gpu memory usage is very large during training.
+This problem can be solved by specifying **--serial** and **--serial_bs** parameters. 
+
+These two parameters will physically specify a virtual batch size, and the corresponding training time will be longer, but logically will not affect the training and the addition of DP noise. The main reason for this is to not violate the theory of DP noise addition.
+
 The Dev branch is still being improved, and new DPFL algorithms including MA, F-DP, and Shuffle are implemented in it. Interested friends are welcome to give valuable advice!

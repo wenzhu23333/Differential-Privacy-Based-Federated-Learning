@@ -99,4 +99,9 @@ To do...
 
 新版本用了[Opacus](https://opacus.ai/)进行**Per Sample Gradient Clip**，限制了每一条Sample计算出的梯度的范数。
 
+本代码设置了本地训练轮数为1，并且batch size为客户端本地的数据集大小，由于Opacus库的训练会保存所有样本的梯度，因此训练时gpu显存占用非常大。
+解决此问题可以通过指定**--serial**和**--serial_bs**参数。
+
+这两个参数会从物理上指定一个虚拟的batch size，相应的训练时间会变长，但是逻辑上不会影响训练和DP噪声的添加，这么做的主要原因是为了不违背DP噪声添加的理论。
+
 Dev分支目前还在完善中，里面实现了包括MA、F-DP、以及Shuffle等新的DPFL算法，欢迎感兴趣的朋友提出宝贵意见！
