@@ -1,5 +1,10 @@
+absl==0.0
+absl_py==1.4.0
 matplotlib==3.7.0
 numpy==1.24.2
 opacus==1.1.1
+scikit_learn==1.2.1
+scipy==1.10.1
+six==1.16.0
 torch==1.12.1+cu116
 torchvision==0.13.1+cu116

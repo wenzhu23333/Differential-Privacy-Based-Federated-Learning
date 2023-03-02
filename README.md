@@ -40,6 +40,8 @@ Drawing: python3 draw.py
 
 ![Mnist](mnist_gaussian.png)
 
+![Mnist](mnist_gaussian_MA.png)
+
 ### No DP
 
 ```shell

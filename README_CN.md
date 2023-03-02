@@ -44,6 +44,8 @@
 
 ![Mnist](mnist_gaussian.png)
 
+![Mnist](mnist_gaussian_MA.png)
+
 ### 无噪声的FL
 
 ```shell
