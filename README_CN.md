@@ -36,7 +36,7 @@
 
 ### 运行样例
 
-实验环境：MNIST、高斯机制（Simple合成定理）
+实验环境：MNIST、高斯机制（Simple合成定理、Moment Account机制）
 
 实验命令: bash run.sh
 
