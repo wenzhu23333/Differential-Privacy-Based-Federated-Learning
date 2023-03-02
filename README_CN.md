@@ -66,7 +66,7 @@ python main.py --dataset mnist --model cnn --epochs 50 --dp_mechanism Gaussian -
 本仓库使用[Tensorflow Privacy](https://github.com/tensorflow/privacy)来计算基于Gaussian Mechanism的Moment Account(MA)的噪声标准差。
 
 ```shell
-python main.py --dataset mnist --model cnn --epochs 50 --dp_mechanism MA --dp_epsilon 10 --dp_delta 1e-5 --dp_clip 10
+python main.py --dataset mnist --model cnn --dp_mechanism MA --dp_epsilon 10 --dp_delta 1e-5 --dp_clip 10 --dp_sample 0.01
 ```
 以下论文可以提供更多信息。
 

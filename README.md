@@ -62,7 +62,7 @@ python main.py --dataset mnist --model cnn --dp_mechanism Gaussian --dp_epsilon 
 We use [Tensorflow Privacy](https://github.com/tensorflow/privacy) to calculate noise scale of the Moment Account(MA) for Gaussian Mechanism.
 
 ```shell
-python main.py --dataset mnist --model cnn --dp_mechanism MA --dp_epsilon 10 --dp_delta 1e-5 --dp_clip 10
+python main.py --dataset mnist --model cnn --dp_mechanism MA --dp_epsilon 10 --dp_delta 1e-5 --dp_clip 10 --dp_sample 0.01
 ```
 See the paper for detailed mechanism. 
 
