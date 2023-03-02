@@ -26,7 +26,7 @@ Important note: The number of FL local update rounds used in this code is all 1,
 
 **Model**: CNN, MLP, LSTM for Shakespeare
 
-**DP Mechanism**: Laplace, Gaussian(Simple Composition), **Todo**: Gaussian(*moments* accountant)
+**DP Mechanism**: Laplace, Gaussian(Simple Composition), Gaussian(*moments* accountant)
 
 **DP Parameter**: $\epsilon$ and $\delta$
 

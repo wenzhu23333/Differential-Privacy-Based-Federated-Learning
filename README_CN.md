@@ -28,7 +28,7 @@
 
 **模型**: CNN, MLP, LSTM for Shakespeare
 
-**DP机制**: Laplace, Gaussian(Simple Composition), **Todo**: Gaussian(*moments* accountant)
+**DP机制**: Laplace, Gaussian(Simple Composition), Gaussian(*moments* accountant)
 
 **DP参数**: $\epsilon$ and $\delta$
 
