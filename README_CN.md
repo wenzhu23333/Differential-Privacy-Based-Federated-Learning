@@ -44,29 +44,41 @@
 
 ![Mnist](mnist_gaussian.png)
 
-### 无DP噪声的FL
+### 无噪声的FL
 
+```shell
 python main.py --dataset mnist --iid --model cnn --epochs 50 --dp_mechanism no_dp
-
-### 拉普拉斯机制
-
-该代码是基于Simple Composition的，也就是说，如果某个客户端的隐私预算是$\epsilon$，这个客户端被选中$T$次的话，那么该客户端每次加噪使用的预算为$\epsilon / T$。
-
-python main.py --dataset mnist --iid --model cnn --epochs 50 --dp_mechanism Laplace --dp_epsilon 10 --dp_clip 10
-
+```
 ### 高斯机制
 
 #### Simple合成定理
 
-python main.py --dataset mnist --iid --model cnn --epochs 50 --dp_mechanism Gaussian --dp_epsilon 10 --dp_delta 1e-5 --dp_clip 10
+基于DP中的Simple Composition。
+
+也就是说，如果某个客户端的隐私预算是 $\epsilon$ ，这个客户端被选中 $T$ 次的话，那么该客户端每次加噪使用的预算为 $\epsilon / T$。
+
+```shell
+python main.py --dataset mnist --model cnn --epochs 50 --dp_mechanism Gaussian --dp_epsilon 10 --dp_delta 1e-5 --dp_clip 10
+```
 
 #### Moments Accountant
 
-See the paper for detailed mechanism. 
+本仓库使用[Tensorflow Privacy](https://github.com/tensorflow/privacy)来计算基于Gaussian Mechanism的Moment Account(MA)的噪声标准差。
+
+```shell
+python main.py --dataset mnist --model cnn --epochs 50 --dp_mechanism MA --dp_epsilon 10 --dp_delta 1e-5 --dp_clip 10
+```
+以下论文可以提供更多信息。
 
 Abadi, Martin, et al. "Deep learning with differential privacy." *Proceedings of the 2016 ACM SIGSAC conference on computer and communications security*. 2016.
 
-To do...
+### Laplace Mechanism
+
+基于DP中的Simple Composition。
+
+```shell
+python main.py --dataset mnist --model cnn --epochs 50 --dp_mechanism Laplace --dp_epsilon 10 --dp_clip 10
+```
 
 ## 论文
 

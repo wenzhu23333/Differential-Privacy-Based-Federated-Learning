@@ -15,7 +15,7 @@ import os
 
 from utils.sampling import mnist_iid, mnist_noniid, cifar_iid,cifar_noniid
 from utils.options import args_parser
-from models.Update import LocalUpdate, LocalUpdateSerial
+from models.Update import LocalUpdateDP, LocalUpdateDPSerial
 from models.Nets import MLP, CNNMnist, CNNCifar, CNNFemnist, CharLSTM
 from models.Fed import FedAvg, FedWeightAvg
 from models.test import test_img
@@ -33,6 +33,8 @@ if __name__ == '__main__':
 
     args = args_parser()
     args.device = torch.device('cuda:{}'.format(args.gpu) if torch.cuda.is_available() and args.gpu != -1 else 'cpu')
+    dict_users = {}
+    dataset_train, dataset_test = None, None
 
     # load dataset and split users
     if args.dataset == 'mnist':
@@ -98,6 +100,7 @@ if __name__ == '__main__':
         exit('Error: unrecognized dataset')
     img_size = dataset_train[0][0].shape
 
+    net_glob = None
     # build model
     if args.model == 'cnn' and args.dataset == 'cifar':
         net_glob = CNNCifar(args=args).to(args.device)
@@ -115,11 +118,6 @@ if __name__ == '__main__':
     else:
         exit('Error: unrecognized model')
 
-    dp_epsilon = args.dp_epsilon / (args.frac * args.epochs)
-    dp_delta = args.dp_delta
-    dp_mechanism = args.dp_mechanism
-    dp_clip = args.dp_clip
-
     # use opacus to wrap model to clip per sample gradient
     net_glob = GradSampleModule(net_glob)
     print(net_glob)
@@ -132,7 +130,11 @@ if __name__ == '__main__':
 
     # training
     acc_test = []
-    learning_rate = [args.lr for i in range(args.num_users)]
+    if args.serial:
+        clients = [LocalUpdateDP(args=args, dataset=dataset_train, idxs=dict_users[i]) for i in range(args.num_users)]
+    else:
+        clients = [LocalUpdateDPSerial(args=args, dataset=dataset_train, idxs=dict_users[i]) for i in range(args.num_users)]
+
     for iter in range(args.epochs):
         t_start = time.time()
         w_locals, loss_locals, weight_locols = [], [], []
@@ -142,17 +144,8 @@ if __name__ == '__main__':
         idxs_users = all_clients[int(begin_index * args.num_users * args.frac):
                                    int((begin_index + 1) * args.num_users * args.frac)]
         for idx in idxs_users:
-            args.lr = learning_rate[idx]
-            if args.serial:
-                local = LocalUpdateSerial(args=args, dataset=dataset_train, idxs=dict_users[idx],
-                                          dp_epsilon=dp_epsilon, dp_delta=dp_delta,
-                                          dp_mechanism=dp_mechanism, dp_clip=dp_clip)
-            else:
-                local = LocalUpdate(args=args, dataset=dataset_train, idxs=dict_users[idx],
-                                    dp_epsilon=dp_epsilon, dp_delta=dp_delta,
-                                    dp_mechanism=dp_mechanism, dp_clip=dp_clip)
-            w, loss, curLR = local.train(net=copy.deepcopy(net_glob).to(args.device))
-            learning_rate[idx] = curLR
+            local = clients[idx]
+            w, loss = local.train(net=copy.deepcopy(net_glob).to(args.device))
             w_locals.append(copy.deepcopy(w))
             loss_locals.append(copy.deepcopy(loss))
             weight_locols.append(len(dict_users[idx]))

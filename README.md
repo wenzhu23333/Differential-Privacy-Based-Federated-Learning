@@ -42,35 +42,40 @@ Drawing: python3 draw.py
 
 ### No DP
 
-You can run like this:
-
-python main.py --dataset mnist --iid --model cnn --epochs 50 --dp_mechanism no_dp
-
-### Laplace Mechanism
-
-This code is based on Simple Composition in DP. In other words, if a client's privacy budget is $\epsilon$ and the client is selected $T$ times, the client's budget for each noising is $\epsilon / T$.
-
-You can run like this:
-
-python main.py --dataset mnist --iid --model cnn --epochs 50 --dp_mechanism Laplace --dp_epsilon 10 --dp_clip 10
-
+```shell
+python main.py --dataset mnist --model cnn --dp_mechanism no_dp
+```
 ### Gaussian Mechanism
 
 #### Simple Composition
 
-The same as Laplace Mechanism.
+Based on Simple Composition in DP. 
 
-You can run like this:
+In other words, if a client's privacy budget is $\epsilon$ and the client is selected $T$ times, the client's budget for each noising is $\epsilon / T$.
 
-python main.py --dataset mnist --iid --model cnn --epochs 50 --dp_mechanism Gaussian --dp_epsilon 10 --dp_delta 1e-5 --dp_clip 10
+```shell
+python main.py --dataset mnist --model cnn --dp_mechanism Gaussian --dp_epsilon 10 --dp_delta 1e-5 --dp_clip 10
+```
 
 #### Moments Accountant
 
+We use [Tensorflow Privacy](https://github.com/tensorflow/privacy) to calculate noise scale of the Moment Account(MA) for Gaussian Mechanism.
+
+```shell
+python main.py --dataset mnist --model cnn --dp_mechanism MA --dp_epsilon 10 --dp_delta 1e-5 --dp_clip 10
+```
 See the paper for detailed mechanism. 
 
 Abadi, Martin, et al. "Deep learning with differential privacy." *Proceedings of the 2016 ACM SIGSAC conference on computer and communications security*. 2016.
 
-To do...
+### Laplace Mechanism
+
+Based on Simple Composition in DP. 
+
+```shell
+python main.py --dataset mnist --model cnn --dp_mechanism Laplace --dp_epsilon 10 --dp_clip 10
+```
+
 
 ## Papers
 
