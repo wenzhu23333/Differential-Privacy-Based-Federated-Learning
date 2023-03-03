@@ -43,3 +43,16 @@ if __name__ == '__main__':
     plt.legend()
     plt.savefig('mnist_gaussian_MA.png')
 
+    plt.figure()
+    epsilon_array = ['10.0', '25.0', '50.0', '75.0', '100.0']
+    plt.ylabel('test accuracy')
+    plt.xlabel('global round')
+    for epsilon in epsilon_array:
+        y = openfile('./log/accfile_fed_mnist_cnn_100_iidFalse_dp_Laplace_epsilon_{}.dat'.format(epsilon))
+        plt.plot(range(100), y, label=r'$\epsilon={}$'.format(epsilon))
+    y = openfile('./log/accfile_fed_mnist_cnn_100_iidFalse_dp_no_dp_epsilon_20.dat'.format(epsilon))
+    plt.plot(range(100), y, label=r'$\epsilon=+\infty$')
+    plt.title('Mnist Laplace')
+    plt.legend()
+    plt.savefig('mnist_gaussian_laplace.png')
+

@@ -32,15 +32,30 @@ Important note: The number of FL local update rounds used in this code is all 1,
 
 **DP Clip**: In DP-based FL, we usually clip the gradients in training and the clip is an important parameter to calculate the sensitivity.
 
-### Example Mnist Gaussian Mechanism
+### Example Results
 
-Experiments: bash run.sh
+Experiments code: 
+```shell
+bash run.sh
+```
 
-Drawing: python3 draw.py
+Drawing code: 
+```shell
+python3 draw.py
+```
+
+#### Gaussian (Simple Composition)
 
 ![Mnist](mnist_gaussian.png)
 
+#### Gaussian (Moment Account)
+
 ![Mnist](mnist_gaussian_MA.png)
+
+#### Laplace
+
+![Mnist](mnist_gaussian_laplace.png)
+
 
 ### No DP
 

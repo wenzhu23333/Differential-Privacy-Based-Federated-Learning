@@ -36,15 +36,29 @@
 
 ### 运行样例
 
-实验环境：MNIST、高斯机制（Simple合成定理、Moment Account机制）
+实验环境：MNIST、高斯机制（Simple合成定理、Moment Account机制）、拉普拉斯机制。
 
-实验命令: bash run.sh
+实验命令: 
+```shell
+bash run.sh
+```
 
-绘图命令: python3 draw.py
+绘图命令: 
+```shell
+python3 draw.py
+```
+
+#### Gaussian (Simple Composition)
 
 ![Mnist](mnist_gaussian.png)
 
+#### Gaussian (Moment Account)
+
 ![Mnist](mnist_gaussian_MA.png)
+
+#### Laplace
+
+![Mnist](mnist_gaussian_laplace.png)
 
 ### 无噪声的FL
 
