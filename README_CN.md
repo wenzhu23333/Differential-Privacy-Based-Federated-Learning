@@ -103,6 +103,7 @@ python main.py --dataset mnist --model cnn --epochs 50 --dp_mechanism Laplace --
 - 高斯机制
   - Wei, Kang, et al. "[Federated learning with differential privacy: Algorithms and performance analysis.](https://ieeexplore.ieee.org/document/9069945)" *IEEE Transactions on Information Forensics and Security* 15 (2020): 3454-3469.
   - Y. Zhou, et al.,"[Optimizing the Numbers of Queries and Replies in Convex Federated Learning with Differential Privacy](https://ieeexplore.ieee.org/document/10008087/)" in IEEE Transactions on Dependable and Secure Computing, 2023.
+  - K. Wei, et al.,"[User-Level Privacy-Preserving Federated Learning: Analysis and Performance Optimization](https://ieeexplore.ieee.org/document/9347706)" in IEEE Transactions on Mobile Computing, vol. 21, no. 09, pp. 3388-3401, 2022.
   - Geyer, Robin C., Tassilo Klein, and Moin Nabi. "[Differentially private federated learning: A client level perspective.](https://arxiv.org/abs/1712.07557)" *arXiv preprint arXiv:1712.07557* (2017).
   - Seif, Mohamed, Ravi Tandon, and Ming Li. "[Wireless federated learning with local differential privacy.](https://arxiv.org/abs/2002.05151)" *2020 IEEE International Symposium on Information Theory (ISIT)*. IEEE, 2020.
   - Mohammadi, Nima, et al. "[Differential privacy meets federated learning under communication constraints.](https://ieeexplore.ieee.org/document/9511628)" *IEEE Internet of Things Journal* (2021).
