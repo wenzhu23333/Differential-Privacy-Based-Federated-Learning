@@ -93,7 +93,7 @@ Abadi, Martin, et al. "Deep learning with differential privacy." *Proceedings of
 基于DP中的Simple Composition。
 
 ```shell
-python main.py --dataset mnist --model cnn --epochs 50 --dp_mechanism Laplace --dp_epsilon 10 --dp_clip 10
+python main.py --dataset mnist --model cnn --epochs 50 --dp_mechanism Laplace --dp_epsilon 30 --dp_clip 50
 ```
 
 ## 论文
