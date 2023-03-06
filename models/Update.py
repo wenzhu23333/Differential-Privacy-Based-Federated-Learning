@@ -93,25 +93,21 @@ class LocalUpdateDP(object):
 
     def add_noise(self, net):
         sensitivity = cal_sensitivity(self.lr, self.args.dp_clip, len(self.idxs_sample))
+        state_dict = net.state_dict()
         if self.args.dp_mechanism == 'Laplace':
-            with torch.no_grad():
-                for k, v in net.named_parameters():
-                    noise = np.random.laplace(loc=0, scale=sensitivity * self.noise_scale, size=v.shape)
-                    noise = torch.from_numpy(noise).to(self.args.device)
-                    v += noise
+            for k, v in state_dict.items():
+                state_dict[k] += torch.from_numpy(np.random.laplace(loc=0, scale=sensitivity * self.noise_scale,
+                                                                    size=v.shape)).to(self.args.device)
         elif self.args.dp_mechanism == 'Gaussian':
-            with torch.no_grad():
-                for k, v in net.named_parameters():
-                    noise = np.random.normal(loc=0, scale=sensitivity * self.noise_scale, size=v.shape)
-                    noise = torch.from_numpy(noise).to(self.args.device)
-                    v += noise
+            for k, v in state_dict.items():
+                state_dict[k] += torch.from_numpy(np.random.normal(loc=0, scale=sensitivity * self.noise_scale,
+                                                                   size=v.shape)).to(self.args.device)
         elif self.args.dp_mechanism == 'MA':
             sensitivity = cal_sensitivity_MA(self.args.lr, self.args.dp_clip, len(self.idxs_sample))
-            with torch.no_grad():
-                for k, v in net.named_parameters():
-                    noise = np.random.normal(loc=0, scale=sensitivity * self.noise_scale, size=v.shape)
-                    noise = torch.from_numpy(noise).to(self.args.device)
-                    v += noise
+            for k, v in state_dict.items():
+                state_dict[k] += torch.from_numpy(np.random.normal(loc=0, scale=sensitivity * self.noise_scale,
+                                                                   size=v.shape)).to(self.args.device)
+        net.load_state_dict(state_dict)
 
 
 class LocalUpdateDPSerial(LocalUpdateDP):
