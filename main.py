@@ -131,9 +131,9 @@ if __name__ == '__main__':
     # training
     acc_test = []
     if args.serial:
-        clients = [LocalUpdateDP(args=args, dataset=dataset_train, idxs=dict_users[i]) for i in range(args.num_users)]
-    else:
         clients = [LocalUpdateDPSerial(args=args, dataset=dataset_train, idxs=dict_users[i]) for i in range(args.num_users)]
+    else:
+        clients = [LocalUpdateDP(args=args, dataset=dataset_train, idxs=dict_users[i]) for i in range(args.num_users)]
 
     for iter in range(args.epochs):
         t_start = time.time()

@@ -85,7 +85,8 @@ class LocalUpdateDP(object):
         per_sample_clip_factor = (
             torch.div(clipping, (per_sample_norms + 1e-6))
         ).clamp(max=1.0)
-        for factor, grad in zip(per_sample_clip_factor, grad_samples):
+        for grad in grad_samples:
+            factor = per_sample_clip_factor.reshape(per_sample_clip_factor.shape + (1,) * (grad.dim() - 1))
             grad.detach().mul_(factor.to(grad.device))
         # average per sample gradient after clipping and set back gradient
         for param in net.parameters():
