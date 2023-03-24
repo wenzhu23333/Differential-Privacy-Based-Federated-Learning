@@ -27,7 +27,7 @@ class LocalUpdateDP(object):
     def __init__(self, args, dataset=None, idxs=None):
         self.args = args
         self.loss_func = nn.CrossEntropyLoss()
-        self.idxs_sample = np.random.choice(idxs, int(self.args.dp_sample * len(idxs)), replace=False)
+        self.idxs_sample = np.random.choice(list(idxs), int(self.args.dp_sample * len(idxs)), replace=False)
         self.ldr_train = DataLoader(DatasetSplit(dataset, self.idxs_sample), batch_size=len(self.idxs_sample),
                                     shuffle=True)
         self.idxs = idxs
