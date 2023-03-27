@@ -125,7 +125,6 @@ if __name__ == '__main__':
 
     # copy weights
     w_glob = net_glob.state_dict()
-
     all_clients = list(range(args.num_users))
 
     # training
@@ -134,15 +133,14 @@ if __name__ == '__main__':
         clients = [LocalUpdateDPSerial(args=args, dataset=dataset_train, idxs=dict_users[i]) for i in range(args.num_users)]
     else:
         clients = [LocalUpdateDP(args=args, dataset=dataset_train, idxs=dict_users[i]) for i in range(args.num_users)]
-
+    m, loop_index = max(int(args.frac * args.num_users), 1), int(1 / args.frac)
     for iter in range(args.epochs):
         t_start = time.time()
         w_locals, loss_locals, weight_locols = [], [], []
-        m = max(int(args.frac * args.num_users), 1)
-        # idxs_users = np.random.choice(range(args.num_users), m, replace=False)
-        begin_index = iter % (1 / args.frac)
-        idxs_users = all_clients[int(begin_index * args.num_users * args.frac):
-                                   int((begin_index + 1) * args.num_users * args.frac)]
+        # round-robin selection
+        begin_index = (iter % loop_index) * m
+        end_index = begin_index + m
+        idxs_users = all_clients[begin_index:end_index]
         for idx in idxs_users:
             local = clients[idx]
             w, loss = local.train(net=copy.deepcopy(net_glob).to(args.device))
