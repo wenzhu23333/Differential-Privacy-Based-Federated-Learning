@@ -3,7 +3,7 @@ python3 -u main.py --dataset mnist --dp_mechanism Gaussian --dp_epsilon 20 --dp_
 python3 -u main.py --dataset mnist --dp_mechanism Gaussian --dp_epsilon 10 --dp_clip 10 --gpu 1
 python3 -u main.py --dataset mnist --dp_mechanism Gaussian --dp_epsilon 5 --dp_clip 10 --gpu 1
 python3 -u main.py --dataset mnist --dp_mechanism Gaussian --dp_epsilon 1 --dp_clip 10 --gpu 3
-python3 -u main.py --dataset mnist --dp_mechanism no_dp --gpu 3 > running/6.log &
+python3 -u main.py --dataset mnist --dp_mechanism no_dp --gpu 3
 
 
 python3 -u main.py --dataset mnist --dp_mechanism MA --dp_epsilon 30 --dp_clip 10 --gpu 3 --dp_sample 0.01
