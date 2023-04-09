@@ -133,3 +133,13 @@ This problem can be solved by specifying **--serial** and **--serial_bs** parame
 These two parameters will physically specify a virtual batch size, and the corresponding training time will be longer, but logically will not affect the training and the addition of DP noise. The main reason for this is to not violate the theory of DP noise addition.
 
 The Dev branch is still being improved, and new DPFL algorithms including MA, F-DP, and Shuffle are implemented in it. Interested friends are welcome to give valuable advice!
+
+## Citation
+
+Consider citing following papers:
+
+[1] W. Yang et al., "Gain Without Pain: Offsetting DP-Injected Noises Stealthily in Cross-Device Federated Learning," in IEEE Internet of Things Journal, vol. 9, no. 22, pp. 22147-22157, 15 Nov.15, 2022, doi: 10.1109/JIOT.2021.3102030.
+
+[2] M. Hu et al., "AutoFL: A Bayesian Game Approach for Autonomous Client Participation in Federated Edge Learning," in IEEE Transactions on Mobile Computing, doi: 10.1109/TMC.2022.3227014.
+
+[3] Y. Zhou et al., "Optimizing the Numbers of Queries and Replies in Convex Federated Learning with Differential Privacy," in IEEE Transactions on Dependable and Secure Computing, doi: 10.1109/TDSC.2023.3234599.

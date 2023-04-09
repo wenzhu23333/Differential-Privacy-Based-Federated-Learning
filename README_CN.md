@@ -134,3 +134,13 @@ python main.py --dataset mnist --model cnn --epochs 50 --dp_mechanism Laplace --
 这两个参数会从物理上指定一个虚拟的batch size，相应的训练时间会变长，但是逻辑上不会影响训练和DP噪声的添加，这么做的主要原因是为了不违背DP噪声添加的理论。
 
 Dev分支目前还在完善中，里面实现了包括MA、F-DP、以及Shuffle等新的DPFL算法，欢迎感兴趣的朋友提出宝贵意见！
+
+## 引用
+
+考虑引用以下文章：
+
+[1] W. Yang et al., "Gain Without Pain: Offsetting DP-Injected Noises Stealthily in Cross-Device Federated Learning," in IEEE Internet of Things Journal, vol. 9, no. 22, pp. 22147-22157, 15 Nov.15, 2022, doi: 10.1109/JIOT.2021.3102030.
+
+[2] M. Hu et al., "AutoFL: A Bayesian Game Approach for Autonomous Client Participation in Federated Edge Learning," in IEEE Transactions on Mobile Computing, doi: 10.1109/TMC.2022.3227014.
+
+[3] Y. Zhou et al., "Optimizing the Numbers of Queries and Replies in Convex Federated Learning with Differential Privacy," in IEEE Transactions on Dependable and Secure Computing, doi: 10.1109/TDSC.2023.3234599.
