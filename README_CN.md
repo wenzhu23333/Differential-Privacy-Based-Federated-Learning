@@ -7,7 +7,7 @@
 </a>
 <span> | </span>
 <a href="https://github.com/wenzhu23333/Differential-Privacy-Based-Federated-Learning/blob/master/README_CN.md">
-      Chinese
+      简体中文
 </a>
 </h3>
 </div>
