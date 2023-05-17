@@ -48,7 +48,7 @@ class LocalUpdateDP(object):
 
     def train(self, net):
         net.train()
-        optimizer = torch.optim.SGD(net.parameters(), lr=self.lr, momentum=self.args.momentum)
+        optimizer = torch.optim.SGD(net.parameters(), lr=self.lr)
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=self.args.lr_decay)
         loss_client = 0
         for images, labels in self.ldr_train:
