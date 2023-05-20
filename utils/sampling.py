@@ -6,30 +6,6 @@
 import numpy as np
 from torchvision import datasets, transforms
 
-
-def openSamplingFile(filepath):
-    file = open(filepath)
-    dict_users = {}
-    index = 0
-    while True:
-        line = file.readline()
-        if line.rstrip('\n') == '':
-            break
-        temp = []
-        line = line[0:len(line)-2]
-        line = line.split(',')
-        # print(line)
-        for cur in line:
-            temp.append(int(cur))
-        dict_users[index] = set(temp)
-        index += 1
-        if not line:
-            break
-        pass
-    file.close()
-    return dict_users
-
-
 def mnist_iid(dataset, num_users):
     """
     Sample I.I.D. client data from MNIST dataset
