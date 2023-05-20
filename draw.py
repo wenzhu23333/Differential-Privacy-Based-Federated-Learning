@@ -19,8 +19,8 @@ if __name__ == '__main__':
     mpl.use('TkAgg')
     plt.figure()
     epsilon_array = ['1.0', '5.0', '10.0', '20.0', '30.0']
-    plt.ylabel('test accuracy')
-    plt.xlabel('global round')
+    plt.ylabel('Testing Accuracy')
+    plt.xlabel('Global Round')
     for epsilon in epsilon_array:
         y = openfile('./log/accfile_fed_mnist_cnn_100_iidFalse_dp_Gaussian_epsilon_{}.dat'.format(epsilon))
         plt.plot(range(100), y, label=r'$\epsilon={}$'.format(epsilon))
@@ -32,8 +32,8 @@ if __name__ == '__main__':
 
     plt.figure()
     epsilon_array = ['1.0', '5.0', '10.0', '20.0', '30.0']
-    plt.ylabel('test accuracy')
-    plt.xlabel('global round')
+    plt.ylabel('Testing Accuracy')
+    plt.xlabel('Global Round')
     for epsilon in epsilon_array:
         y = openfile('./log/accfile_fed_mnist_cnn_100_iidFalse_dp_MA_epsilon_{}.dat'.format(epsilon))
         plt.plot(range(100), y, label=r'$\epsilon={}$'.format(epsilon))
@@ -45,8 +45,8 @@ if __name__ == '__main__':
 
     plt.figure()
     epsilon_array = ['10.0', '25.0', '50.0', '75.0', '100.0']
-    plt.ylabel('test accuracy')
-    plt.xlabel('global round')
+    plt.ylabel('Testing Accuracy')
+    plt.xlabel('Global Round')
     for epsilon in epsilon_array:
         y = openfile('./log/accfile_fed_mnist_cnn_100_iidFalse_dp_Laplace_epsilon_{}.dat'.format(epsilon))
         plt.plot(range(100), y, label=r'$\epsilon={}$'.format(epsilon))
