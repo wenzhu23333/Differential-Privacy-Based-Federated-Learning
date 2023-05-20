@@ -34,8 +34,10 @@ Important note: The number of FL local update rounds used in this code is all 1,
 
 ### Example Results
 
-Experiments code: 
+Experiments code:
+
 ```shell
+pip3 install -r requirements.txt
 bash run.sh
 ```
 
