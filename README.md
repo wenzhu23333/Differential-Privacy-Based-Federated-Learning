@@ -145,3 +145,7 @@ Consider citing following papers:
 [2] M. Hu et al., "AutoFL: A Bayesian Game Approach for Autonomous Client Participation in Federated Edge Learning," in IEEE Transactions on Mobile Computing, doi: 10.1109/TMC.2022.3227014.
 
 [3] Y. Zhou et al., "Optimizing the Numbers of Queries and Replies in Convex Federated Learning with Differential Privacy," in IEEE Transactions on Dependable and Secure Computing, doi: 10.1109/TDSC.2023.3234599.
+
+[4] Y. Zhou, et al.,"Exploring the Practicality of Differentially Private Federated Learning: A Local Iteration Tuning Approach" in IEEE Transactions on Dependable and Secure Computing, doi: 10.1109/TDSC.2023.3325889.
+
+[5] Y. Yang, M. Hu, Y. Zhou, X. Liu and D. Wu, "CSRA: Robust Incentive Mechanism Design for Differentially Private Federated Learning," in IEEE Transactions on Information Forensics and Security, doi: 10.1109/TIFS.2023.3329441.
