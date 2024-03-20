@@ -140,12 +140,12 @@ The Dev branch is still being improved, and new DPFL algorithms including MA, F-
 
 Consider citing following papers:
 
-[1] W. Yang et al., "[Gain Without Pain: Offsetting DP-Injected Noises Stealthily in Cross-Device Federated Learning.](https://ieeexplore.ieee.org/document/9504601)", in IEEE Internet of Things Journal, vol. 9, no. 22, pp. 22147-22157, 15 Nov.15, 2022, doi: 10.1109/JIOT.2021.3102030.
+[1] [W. Yang et al., "Gain Without Pain: Offsetting DP-Injected Noises Stealthily in Cross-Device Federated Learning," in IEEE Internet of Things Journal, vol. 9, no. 22, pp. 22147-22157, 15 Nov. 15, 2022, doi: 10.1109/JIOT.2021.3102030](https://ieeexplore.ieee.org/document/9504601)
 
-[2] M. Hu et al., "AutoFL: A Bayesian Game Approach for Autonomous Client Participation in Federated Edge Learning," in IEEE Transactions on Mobile Computing, doi: 10.1109/TMC.2022.3227014.
+[2] [M. Hu et al., "AutoFL: A Bayesian Game Approach for Autonomous Client Participation in Federated Edge Learning," in IEEE Transactions on Mobile Computing, doi: 10.1109/TMC.2022.3227014](https://ieeexplore.ieee.org/document/9971780)
 
-[3] Y. Zhou et al., "Optimizing the Numbers of Queries and Replies in Convex Federated Learning with Differential Privacy," in IEEE Transactions on Dependable and Secure Computing, doi: 10.1109/TDSC.2023.3234599.
+[3] [Y. Zhou et al., "Optimizing the Numbers of Queries and Replies in Convex Federated Learning with Differential Privacy," in IEEE Transactions on Dependable and Secure Computing, vol. 20, no. 6, pp. 4823-4837, Nov. 1, 2023, doi: 10.1109/TDSC.2023.3234599](https://ieeexplore.ieee.org/document/10008087)
 
-[4] Y. Zhou, et al.,"Exploring the Practicality of Differentially Private Federated Learning: A Local Iteration Tuning Approach" in IEEE Transactions on Dependable and Secure Computing, doi: 10.1109/TDSC.2023.3325889.
+[4] [Y. Zhou, et al., "Exploring the Practicality of Differentially Private Federated Learning: A Local Iteration Tuning Approach" in IEEE Transactions on Dependable and Secure Computing, doi: 10.1109/TDSC.2023.3325889](https://www.computer.org/csdl/journal/tq/5555/01/10288275/1Rnlwwwci6A)
 
-[5] Y. Yang, M. Hu, Y. Zhou, X. Liu and D. Wu, "CSRA: Robust Incentive Mechanism Design for Differentially Private Federated Learning," in IEEE Transactions on Information Forensics and Security, doi: 10.1109/TIFS.2023.3329441.
+[5] [Y. Yang, M. Hu, Y. Zhou, X. Liu and D. Wu, "CSRA: Robust Incentive Mechanism Design for Differentially Private Federated Learning," in IEEE Transactions on Information Forensics and Security, doi: 10.1109/TIFS.2023.3329441](https://ieeexplore.ieee.org/document/10304181)
