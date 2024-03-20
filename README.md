@@ -140,7 +140,7 @@ The Dev branch is still being improved, and new DPFL algorithms including MA, F-
 
 Consider citing following papers:
 
-[1] W. Yang et al., "Gain Without Pain: Offsetting DP-Injected Noises Stealthily in Cross-Device Federated Learning," in IEEE Internet of Things Journal, vol. 9, no. 22, pp. 22147-22157, 15 Nov.15, 2022, doi: 10.1109/JIOT.2021.3102030.
+[1] W. Yang et al., "[Gain Without Pain: Offsetting DP-Injected Noises Stealthily in Cross-Device Federated Learning.](https://ieeexplore.ieee.org/document/9504601)", in IEEE Internet of Things Journal, vol. 9, no. 22, pp. 22147-22157, 15 Nov.15, 2022, doi: 10.1109/JIOT.2021.3102030.
 
 [2] M. Hu et al., "AutoFL: A Bayesian Game Approach for Autonomous Client Participation in Federated Edge Learning," in IEEE Transactions on Mobile Computing, doi: 10.1109/TMC.2022.3227014.
 
