@@ -13,14 +13,15 @@ from torchvision import datasets, transforms
 import torch
 import os
 
-from utils.sampling import mnist_iid, mnist_noniid, cifar_iid,cifar_noniid
+from utils.sampling import mnist_iid, mnist_noniid, cifar_iid, cifar_noniid, BNaT_iid, BNaT_noniid
 from utils.options import args_parser
 from models.Update import LocalUpdateDP, LocalUpdateDPSerial
-from models.Nets import MLP, CNNMnist, CNNCifar, CNNFemnist, CharLSTM
+from models.Nets import MLP, CNNMnist, CNNCifar, CNNFemnist, CharLSTM, our_MLP
 from models.Fed import FedAvg, FedWeightAvg
 from models.test import test_img
 from utils.dataset import FEMNIST, ShakeSpeare
 from opacus.grad_sample import GradSampleModule
+from utils.read_BNaT import read_BNaT
 
 if __name__ == '__main__':
     # parse args
@@ -35,6 +36,11 @@ if __name__ == '__main__':
     args.device = torch.device('cuda:{}'.format(args.gpu) if torch.cuda.is_available() and args.gpu != -1 else 'cpu')
     dict_users = {}
     dataset_train, dataset_test = None, None
+
+    args.dataset = 'BNaT'
+    args.iid = False
+    args.model = 'mlp'
+    args.num_classes = 5
 
     # load dataset and split users
     if args.dataset == 'mnist':
@@ -96,6 +102,16 @@ if __name__ == '__main__':
             exit('Error: ShakeSpeare dataset is naturally non-iid')
         else:
             print("Warning: The ShakeSpeare dataset is naturally non-iid, you do not need to specify iid or non-iid")
+    elif args.dataset == 'BNaT':
+        train = "./data/BNaT/Train.csv"
+        test = "./data/BNaT/Test.csv"
+
+        dataset_train, dataset_test = read_BNaT(train, test)
+        if args.iid:
+            dict_users = BNaT_iid(dataset_train, args.num_users)
+        else:
+            dict_users = BNaT_noniid(dataset_train, args.num_users)
+        
     else:
         exit('Error: unrecognized dataset')
     img_size = dataset_train[0][0].shape
@@ -114,7 +130,8 @@ if __name__ == '__main__':
         len_in = 1
         for x in img_size:
             len_in *= x
-        net_glob = MLP(dim_in=len_in, dim_hidden=64, dim_out=args.num_classes).to(args.device)
+        # net_glob = MLP(dim_in=len_in, dim_hidden=64, dim_out=args.num_classes).to(args.device)
+        net_glob = our_MLP(dim_in=len_in, dim_hidden_list=np.full((5), 128), dim_out=args.num_classes).to(args.device)
     else:
         exit('Error: unrecognized model')
 

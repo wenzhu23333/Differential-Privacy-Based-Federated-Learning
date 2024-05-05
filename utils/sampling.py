@@ -6,6 +6,30 @@
 import numpy as np
 from torchvision import datasets, transforms
 
+
+def BNaT_iid(dataset, num_users):
+    """
+    Sample I.I.D. client data from BNaT dataset
+    :param dataset:
+    :param num_users:
+    :return: dict of image index
+    """
+    dict_users = {}
+    num_items = int(len(dataset) / num_users)
+    all_idxs = [i for i in range(len(dataset))]
+    for i in range(num_users):
+        dict_users[i] = set(np.random.choice(all_idxs, num_items, replace=False))
+        all_idxs = list(set(all_idxs) - dict_users[i])
+    return dict_users
+
+def BNaT_noniid(dataset, num_users):
+    num_samp = 1470
+    dict_users = {}
+    for i in range(num_users):
+        dict_users[i] = {j for j in range(i * num_samp,  (i+1) * num_samp)}
+
+    return dict_users
+
 def mnist_iid(dataset, num_users):
     """
     Sample I.I.D. client data from MNIST dataset

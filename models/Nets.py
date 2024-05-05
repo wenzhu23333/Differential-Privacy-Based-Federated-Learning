@@ -7,6 +7,41 @@ from torch import nn
 import torch.nn.functional as F
 from opacus.layers import DPLSTM
 
+class our_MLP(nn.Module):
+    def __init__(self, dim_in, dim_hidden_list, dim_out):
+        super(our_MLP, self).__init__()
+        self.dim_in = dim_in
+        self.dim_hidden_list = dim_hidden_list
+        self.dim_out = dim_out
+
+        # Khởi tạo lớp input
+        self.layers = nn.ModuleList([nn.Linear(dim_in, dim_hidden_list[0])])
+
+        # Thêm các lớp ẩn
+        for i in range(len(dim_hidden_list) - 1):
+            self.layers.append(nn.Linear(dim_hidden_list[i], dim_hidden_list[i+1]))
+
+        # Lớp output
+        self.layers.append(nn.Linear(dim_hidden_list[-1], dim_out))
+
+        # Activation function
+        self.relu = nn.ReLU()
+
+        # Softmax (nếu bạn muốn softmax đầu ra)
+        self.softmax = nn.Softmax(dim=1)
+
+    def forward(self, x):
+        x = x.view(x.shape[0], -1)
+
+        # Truyền tiến qua các lớp ẩn
+        for layer in self.layers[:-1]:
+            x = layer(x)
+            x = self.relu(x)
+
+        # Lớp output (không cần áp dụng softmax nếu sử dụng cross-entropy loss)
+        x = self.layers[-1](x)
+        return x
+
 class MLP(nn.Module):
     def __init__(self, dim_in, dim_hidden, dim_out):
         super(MLP, self).__init__()
@@ -17,7 +52,9 @@ class MLP(nn.Module):
         self.softmax = nn.Softmax(dim=1)
 
     def forward(self, x):
-        x = x.view(-1, x.shape[1]*x.shape[-2]*x.shape[-1])
+        # x = x.view(-1, x.shape[1]*x.shape[-2]*x.shape[-1])
+        x = x.view(x.shape[0], -1)
+
         x = self.layer_input(x)
         x = self.dropout(x)
         x = self.relu(x)

@@ -8,14 +8,14 @@ def args_parser():
     parser = argparse.ArgumentParser()
     # federated arguments
     parser.add_argument('--epochs', type=int, default=100, help="rounds of training")
-    parser.add_argument('--num_users', type=int, default=100, help="number of users: K")
-    parser.add_argument('--frac', type=float, default=0.2, help="the fraction of clients: C")
+    parser.add_argument('--num_users', type=int, default=3, help="number of users: K")
+    parser.add_argument('--frac', type=float, default=1, help="the fraction of clients: C")
     parser.add_argument('--bs', type=int, default=1024, help="test batch size")
     parser.add_argument('--lr', type=float, default=0.1, help="learning rate")
     parser.add_argument('--lr_decay', type=float, default=0.995, help="learning rate decay each round")
 
     # model arguments
-    parser.add_argument('--model', type=str, default='cnn', help='model name')
+    parser.add_argument('--model', type=str, default='mlp', help='model name')
 
     # other arguments
     parser.add_argument('--dataset', type=str, default='mnist', help="name of dataset")
