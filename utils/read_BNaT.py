@@ -4,7 +4,7 @@ import os
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))   # Join parent path to import library
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from torch.utils.data import Dataset, DataLoader
 import torch 
 
@@ -61,7 +61,7 @@ def read_dataset(raw_file):
     nomial(pd_dataset)
     num_features = ["duration", "protocol_type", "service",	"src_bytes", "dst_bytes", "flag", "count", "srv_count", "serror_rate", "same_srv_rate", "diff_srv_rate", "srv_serror_rate", "srv_diff_host_rate", "dst_host_count", "dst_host_srv_count", "dst_host_same_srv_rate", "dst_host_diff_srv_rate", "dst_host_same_src_port_rate", "dst_host_serror_rate", "dst_host_srv_diff_host_rate", "dst_host_srv_serror_rate"]      
     pd_dataset[num_features] = pd_dataset[num_features].astype(float)
-    pd_dataset[num_features] = MinMaxScaler().fit_transform(pd_dataset[num_features].values)
+    pd_dataset[num_features] = StandardScaler().fit_transform(pd_dataset[num_features].values)
     labels_test  = pd_dataset["label"].copy()
     labels_test[labels_test == 'Normal'] = 0
     labels_test[labels_test == 'BP'] = 1
