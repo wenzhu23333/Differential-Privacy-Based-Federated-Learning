@@ -42,6 +42,107 @@ class our_MLP(nn.Module):
         x = self.layers[-1](x)
         return x
 
+class our_CNN(nn.Module):
+    def __init__(self, dim_in, dim_hidden_list, dim_out):
+        super(our_CNN, self).__init__()
+
+        # Assuming dim_in is a tuple (channels, height, width)
+        self.channels, self.height, self.width = dim_in
+
+        layers = []
+        in_channels = self.channels
+
+        for out_channels, kernel_size, stride in dim_hidden_list:
+            layers.append(nn.Conv2d(in_channels, out_channels, kernel_size, stride))
+            layers.append(nn.ReLU())
+            layers.append(nn.MaxPool2d(2, 2))
+            in_channels = out_channels
+
+        self.features = nn.Sequential(*layers)
+
+        with torch.no_grad():
+            self.output_size = self._get_conv_output((1, *dim_in))
+
+        self.fc = nn.Linear(self.output_size, dim_out)
+
+    def _get_conv_output(self, shape):
+        input = torch.rand(*shape)
+        output = self.features(input)
+        return int(torch.numel(output) / output.shape[0])
+
+    def forward(self, x):
+        x = self.features(x)
+        x = x.view(x.size(0), -1)
+        x = self.fc(x)
+        return x
+
+class RBM(nn.Module):
+    def __init__(self, n_vis, n_hid):
+        super(RBM, self).__init__()
+        self.W = nn.Parameter(torch.randn(n_hid, n_vis) * 1e-2)
+        self.v_bias = nn.Parameter(torch.zeros(n_vis))
+        self.h_bias = nn.Parameter(torch.zeros(n_hid))
+
+    def sample_from_p(self, p):
+        return torch.bernoulli(p)
+
+    def v_to_h(self, v):
+        p_h = torch.sigmoid(F.linear(v, self.W, self.h_bias))
+        sample_h = self.sample_from_p(p_h)
+        return p_h, sample_h
+
+    def h_to_v(self, h):
+        p_v = torch.sigmoid(F.linear(h, self.W.t(), self.v_bias))
+        sample_v = self.sample_from_p(p_v)
+        return p_v, sample_v
+
+    def forward(self, v):
+        _, h = self.v_to_h(v)
+        _, v = self.h_to_v(h)
+        return v
+    
+class DBN(nn.Module):
+    def __init__(self, dim_in, dim_hidden_list, dim_out):
+        super(DBN, self).__init__()
+        self.rbm_layers = nn.ModuleList()
+        self.output_layer = nn.Linear(dim_hidden_list[-1], dim_out)
+
+        # Initialize the RBMs
+        previous_layer_size = dim_in
+        for layer_size in dim_hidden_list:
+            self.rbm_layers.append(RBM(previous_layer_size, layer_size))
+            previous_layer_size = layer_size
+
+    def forward(self, x):
+        for rbm in self.rbm_layers:
+            _, x = rbm.v_to_h(x)
+        x = self.output_layer(x)
+        return x
+
+class our_RNN(nn.Module):
+    def __init__(self, dim_in, dim_hidden_list, dim_out):
+        super(our_RNN, self).__init__()
+        
+        # We will use the first element of dim_hidden_list as the RNN hidden size
+        # RNN layers require input of shape (seq_len, batch, input_size)
+        self.rnn = nn.RNN(input_size=dim_in, hidden_size=dim_hidden_list[0], num_layers=len(dim_hidden_list), batch_first=True)
+        
+        # Output layer
+        self.fc = nn.Linear(dim_hidden_list[-1], dim_out)
+
+    def forward(self, x):
+        # x should be of shape (batch, seq_len, input_size)
+        # Get the outputs and the last hidden state
+        rnn_out, _ = self.rnn(x)
+        
+        # We take the output from the last time step for final prediction
+        # rnn_out shape is (batch, seq_len, hidden_size)
+        last_time_step_out = rnn_out[:, -1, :]
+        
+        # Output layer
+        out = self.fc(last_time_step_out)
+        return out
+
 class MLP(nn.Module):
     def __init__(self, dim_in, dim_hidden, dim_out):
         super(MLP, self).__init__()

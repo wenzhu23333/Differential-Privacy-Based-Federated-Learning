@@ -16,7 +16,7 @@ import os
 from utils.sampling import mnist_iid, mnist_noniid, cifar_iid, cifar_noniid, BNaT_iid, BNaT_noniid
 from utils.options import args_parser
 from models.Update import LocalUpdateDP, LocalUpdateDPSerial
-from models.Nets import MLP, CNNMnist, CNNCifar, CNNFemnist, CharLSTM, our_MLP
+from models.Nets import MLP, CNNMnist, CNNCifar, CNNFemnist, CharLSTM, our_MLP, our_CNN, DBN, our_RNN
 from models.Fed import FedAvg, FedWeightAvg
 from models.test import test_img
 from utils.dataset import FEMNIST, ShakeSpeare
@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
     args.dataset = 'BNaT'
     args.iid = False
-    args.model = 'mlp'
+    #args.model = 'mlp'
     args.num_classes = 5
 
     # load dataset and split users
@@ -124,6 +124,23 @@ if __name__ == '__main__':
         net_glob = CNNMnist(args=args).to(args.device)
     elif args.dataset == 'femnist' and args.model == 'cnn':
         net_glob = CNNFemnist(args=args).to(args.device)
+
+    elif args.dataset == 'BNaT' and args.model == 'cnn':
+        # len_in = 1
+        # for x in img_size:
+        #     len_in *= x
+        net_glob = our_CNN((1470, 21, 1), [(32, 3, 1), (64, 3, 1), (128, 3, 1)], dim_out=args.num_classes)
+        #net_glob = our_CNN(dim_in=len_in, dim_hidden_list=np.full((5), 128), dim_out=args.num_classes).to(args.device)
+    
+    elif args.dataset == 'BNaT' and args.model == 'dbn':
+        # len_in = 1
+        # for x in img_size:
+        #     len_in *= x
+        net_glob = DBN(dim_in=len_in, dim_hidden_list=np.full((5), 128), dim_out=args.num_classes).to(args.device)
+        #net_glob = our_CNN(dim_in=len_in, dim_hidden_list=np.full((5), 128), dim_out=args.num_classes).to(args.device)
+    elif args.dataset == 'BNaT' and args.model == 'rnn':
+        net_glob = our_RNN(args=args).to(args.device)
+
     elif args.dataset == 'shakespeare' and args.model == 'lstm':
         net_glob = CharLSTM().to(args.device)
     elif args.model == 'mlp':
@@ -132,6 +149,7 @@ if __name__ == '__main__':
             len_in *= x
         # net_glob = MLP(dim_in=len_in, dim_hidden=64, dim_out=args.num_classes).to(args.device)
         net_glob = our_MLP(dim_in=len_in, dim_hidden_list=np.full((5), 128), dim_out=args.num_classes).to(args.device)
+        
     else:
         exit('Error: unrecognized model')
 
