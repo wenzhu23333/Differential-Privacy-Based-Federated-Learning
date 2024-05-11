@@ -43,105 +43,82 @@ class our_MLP(nn.Module):
         return x
 
 class our_CNN(nn.Module):
-    def __init__(self, dim_in, dim_hidden_list, dim_out):
+    def __init__(self, dim_in, dim_out):
         super(our_CNN, self).__init__()
 
-        # Assuming dim_in is a tuple (channels, height, width)
-        self.channels, self.height, self.width = dim_in
+        self.dim_in = dim_in
+        self.dim_out = dim_out
 
-        layers = []
-        in_channels = self.channels
-
-        for out_channels, kernel_size, stride in dim_hidden_list:
-            layers.append(nn.Conv2d(in_channels, out_channels, kernel_size, stride))
-            layers.append(nn.ReLU())
-            layers.append(nn.MaxPool2d(2, 2))
-            in_channels = out_channels
-
-        self.features = nn.Sequential(*layers)
-
-        with torch.no_grad():
-            self.output_size = self._get_conv_output((1, *dim_in))
-
-        self.fc = nn.Linear(self.output_size, dim_out)
-
-    def _get_conv_output(self, shape):
-        input = torch.rand(*shape)
-        output = self.features(input)
-        return int(torch.numel(output) / output.shape[0])
+        self.conv1 = nn.Conv1d(self.dim_in, 16, kernel_size=1)  
+        self.conv2 = nn.Conv1d(16, 32, kernel_size=1)
+        self.flatten = nn.Flatten() 
+        self.fc1 = nn.Linear(32, 128) 
+        self.fc2 = nn.Linear(128, self.dim_out) 
 
     def forward(self, x):
-        x = self.features(x)
-        x = x.view(x.size(0), -1)
-        x = self.fc(x)
-        return x
+        x = torch.relu(self.conv1(x))
+        x = torch.relu(self.conv2(x))
+        x = self.flatten(x)
+        x = self.fc1(x)
+        x = torch.relu(x)
+        x = self.fc2(x)
+        return torch.softmax(x, dim=1)
 
+# Định nghĩa lớp RBM
 class RBM(nn.Module):
-    def __init__(self, n_vis, n_hid):
+    def __init__(self, visible_units, hidden_units):
         super(RBM, self).__init__()
-        self.W = nn.Parameter(torch.randn(n_hid, n_vis) * 1e-2)
-        self.v_bias = nn.Parameter(torch.zeros(n_vis))
-        self.h_bias = nn.Parameter(torch.zeros(n_hid))
-
-    def sample_from_p(self, p):
-        return torch.bernoulli(p)
-
-    def v_to_h(self, v):
-        p_h = torch.sigmoid(F.linear(v, self.W, self.h_bias))
-        sample_h = self.sample_from_p(p_h)
-        return p_h, sample_h
-
-    def h_to_v(self, h):
-        p_v = torch.sigmoid(F.linear(h, self.W.t(), self.v_bias))
-        sample_v = self.sample_from_p(p_v)
-        return p_v, sample_v
+        self.W = nn.Parameter(torch.randn(visible_units, hidden_units) * 0.1)
+        self.v_bias = nn.Parameter(torch.zeros(visible_units))
+        self.h_bias = nn.Parameter(torch.zeros(hidden_units))
 
     def forward(self, v):
-        _, h = self.v_to_h(v)
-        _, v = self.h_to_v(h)
-        return v
+        h = torch.sigmoid(torch.matmul(v, self.W) + self.h_bias)
+        return h, torch.bernoulli(h)
     
-class DBN(nn.Module):
-    def __init__(self, dim_in, dim_hidden_list, dim_out):
-        super(DBN, self).__init__()
-        self.rbm_layers = nn.ModuleList()
-        self.output_layer = nn.Linear(dim_hidden_list[-1], dim_out)
+# Định nghĩa mô hình DBN
+class our_DBN(nn.Module):
+    def __init__(self, visible_units=21, hidden_units1=64, hidden_units2=64, num_classes=5):
+        super(our_DBN, self).__init__()
+        
+        self.rbm1 = RBM(visible_units=visible_units, hidden_units=hidden_units1)
+        self.rbm2 = RBM(visible_units=hidden_units1, hidden_units=hidden_units2)
+        rbm_layers = [self.rbm1, self.rbm2]
 
-        # Initialize the RBMs
-        previous_layer_size = dim_in
-        for layer_size in dim_hidden_list:
-            self.rbm_layers.append(RBM(previous_layer_size, layer_size))
-            previous_layer_size = layer_size
+        self.rbm_layers = nn.ModuleList(rbm_layers)
+        self.fc = nn.Linear(rbm_layers[-1].W.shape[1], num_classes)
+        self.softmax = nn.Softmax(dim=1)
+        self.flatten = nn.Flatten()
 
     def forward(self, x):
+        x = self.flatten(x)
         for rbm in self.rbm_layers:
-            _, x = rbm.v_to_h(x)
-        x = self.output_layer(x)
+            x, _ = rbm(x)
+        x = self.fc(x)
+        x = self.softmax(x)
         return x
 
 class our_RNN(nn.Module):
-    def __init__(self, dim_in, dim_hidden_list, dim_out):
+    def __init__(self, dim_in, dim_hidden, dim_out, num_layers):
         super(our_RNN, self).__init__()
-        
-        # We will use the first element of dim_hidden_list as the RNN hidden size
-        # RNN layers require input of shape (seq_len, batch, input_size)
-        self.rnn = nn.RNN(input_size=dim_in, hidden_size=dim_hidden_list[0], num_layers=len(dim_hidden_list), batch_first=True)
-        
-        # Output layer
-        self.fc = nn.Linear(dim_hidden_list[-1], dim_out)
+        self.dim_in = dim_in
+        self.dim_hidden = dim_hidden
+        self.dim_out = dim_out
+        self.num_layers = num_layers
+
+        self.flatten = nn.Flatten()
+        self.rnn = nn.RNN(self.dim_in[0], self.dim_hidden, self.num_layers, batch_first=True)
+        self.fc = nn.Linear(self.dim_hidden, self.dim_out)
 
     def forward(self, x):
-        # x should be of shape (batch, seq_len, input_size)
-        # Get the outputs and the last hidden state
-        rnn_out, _ = self.rnn(x)
-        
-        # We take the output from the last time step for final prediction
-        # rnn_out shape is (batch, seq_len, hidden_size)
-        last_time_step_out = rnn_out[:, -1, :]
-        
-        # Output layer
-        out = self.fc(last_time_step_out)
+        x = self.flatten(x)
+        # batch_size = x.size(0)  # Lấy kích thước batch từ đầu vào
+        # h0 = torch.zeros(self.num_layers, batch_size, self.dim_hidden).to(x.device)  # Đảm bảo rằng trạng thái ẩn ban đầu là 2D
+        out, _ = self.rnn(x)
+        out = self.fc(out)  # chỉ lấy output của lớp cuối cùng
+        out = F.softmax(out, dim=1)  # áp dụng softmax
         return out
+    
 
 class MLP(nn.Module):
     def __init__(self, dim_in, dim_hidden, dim_out):

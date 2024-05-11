@@ -16,7 +16,7 @@ import os
 from utils.sampling import mnist_iid, mnist_noniid, cifar_iid, cifar_noniid, BNaT_iid, BNaT_noniid
 from utils.options import args_parser
 from models.Update import LocalUpdateDP, LocalUpdateDPSerial
-from models.Nets import MLP, CNNMnist, CNNCifar, CNNFemnist, CharLSTM, our_MLP, our_CNN, DBN, our_RNN
+from models.Nets import MLP, CNNMnist, CNNCifar, CNNFemnist, CharLSTM, our_MLP, our_CNN, our_DBN, our_RNN
 from models.Fed import FedAvg, FedWeightAvg
 from models.test import test_img
 from utils.dataset import FEMNIST, ShakeSpeare
@@ -39,8 +39,9 @@ if __name__ == '__main__':
 
     args.dataset = 'BNaT'
     args.iid = False
-    #args.model = 'mlp'
+    args.model = 'dbn'
     args.num_classes = 5
+    args.dp_mechanism = 'no_dp'
 
     # load dataset and split users
     if args.dataset == 'mnist':
@@ -126,23 +127,27 @@ if __name__ == '__main__':
         net_glob = CNNFemnist(args=args).to(args.device)
 
     elif args.dataset == 'BNaT' and args.model == 'cnn':
-        # len_in = 1
-        # for x in img_size:
-        #     len_in *= x
-        net_glob = our_CNN((1470, 21, 1), [(32, 3, 1), (64, 3, 1), (128, 3, 1)], dim_out=args.num_classes)
+        len_in = 1
+        for x in img_size:
+            len_in *= x
+        net_glob = our_CNN(dim_in=len_in, dim_out=args.num_classes).to(args.device)
         #net_glob = our_CNN(dim_in=len_in, dim_hidden_list=np.full((5), 128), dim_out=args.num_classes).to(args.device)
     
     elif args.dataset == 'BNaT' and args.model == 'dbn':
-        # len_in = 1
-        # for x in img_size:
-        #     len_in *= x
-        net_glob = DBN(dim_in=len_in, dim_hidden_list=np.full((5), 128), dim_out=args.num_classes).to(args.device)
-        #net_glob = our_CNN(dim_in=len_in, dim_hidden_list=np.full((5), 128), dim_out=args.num_classes).to(args.device)
+        len_in = 1
+        for x in img_size:
+            len_in *= x
+        net_glob = our_DBN(visible_units=len_in, num_classes=args.num_classes).to(args.device)
+
     elif args.dataset == 'BNaT' and args.model == 'rnn':
-        net_glob = our_RNN(args=args).to(args.device)
+        len_in = 1
+        for x in img_size:
+            len_in *= x
+        net_glob = our_RNN(dim_in=(len_in, 1), dim_hidden=64, dim_out=args.num_classes, num_layers=2).to(args.device)
 
     elif args.dataset == 'shakespeare' and args.model == 'lstm':
         net_glob = CharLSTM().to(args.device)
+
     elif args.model == 'mlp':
         len_in = 1
         for x in img_size:
