@@ -22,6 +22,7 @@ from models.test import test_img
 from utils.dataset import FEMNIST, ShakeSpeare
 from opacus.grad_sample import GradSampleModule
 from utils.read_BNaT import read_BNaT
+import timeit
 
 if __name__ == '__main__':
     # parse args
@@ -42,6 +43,8 @@ if __name__ == '__main__':
     args.model = 'dbn'
     args.num_classes = 5
     args.dp_mechanism = 'no_dp'
+
+    start_time = timeit.default_timer()
 
     # load dataset and split users
     if args.dataset == 'mnist':
@@ -175,6 +178,9 @@ if __name__ == '__main__':
     else:
         clients = [LocalUpdateDP(args=args, dataset=dataset_train, idxs=dict_users[i]) for i in range(args.num_users)]
     m, loop_index = max(int(args.frac * args.num_users), 1), int(1 / args.frac)
+
+    best_acc = 0.0
+    best_matrix = 0
     for iter in range(args.epochs):
         t_start = time.time()
         w_locals, loss_locals, weight_locols = [], [], []
@@ -196,11 +202,13 @@ if __name__ == '__main__':
 
         # print accuracy
         net_glob.eval()
-        acc_t, loss_t = test_img(net_glob, dataset_test, args)
+        acc_t, loss_t, best_acc, best_matrix = test_img(net_glob, dataset_test, args, best_acc, best_matrix)
         t_end = time.time()
         print("Round {:3d},Testing accuracy: {:.2f},Time:  {:.2f}s".format(iter, acc_t, t_end - t_start))
 
         acc_test.append(acc_t.item())
+    print(best_acc, best_matrix)
+    finish_time = timeit.default_timer()
 
     rootpath = './log'
     if not os.path.exists(rootpath):
@@ -213,6 +221,9 @@ if __name__ == '__main__':
         sac = str(ac)
         accfile.write(sac)
         accfile.write('\n')
+    accfile.write('Time: {:.2f}s'.format(finish_time - start_time))
+    accfile.write('\n')
+    accfile.write(str(best_matrix))
     accfile.close()
 
     # plot loss curve
@@ -221,6 +232,3 @@ if __name__ == '__main__':
     plt.ylabel('test accuracy')
     plt.savefig(rootpath + '/fed_{}_{}_{}_C{}_iid{}_dp_{}_epsilon_{}_acc.png'.format(
         args.dataset, args.model, args.epochs, args.frac, args.iid, args.dp_mechanism, args.dp_epsilon))
-
-
-
