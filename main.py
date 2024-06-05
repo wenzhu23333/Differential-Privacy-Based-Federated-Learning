@@ -40,9 +40,9 @@ if __name__ == '__main__':
 
     args.dataset = 'BNaT'
     args.iid = False
-    args.model = 'dbn'
+    # args.model = 'mlp'
     args.num_classes = 5
-    args.dp_mechanism = 'no_dp'
+    # args.dp_mechanism = 'no_dp'
 
     start_time = timeit.default_timer()
 
