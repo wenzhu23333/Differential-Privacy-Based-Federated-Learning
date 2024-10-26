@@ -14,6 +14,7 @@ Languages:
 This repository collects related papers and corresponding codes on DP-based FL.
 
 ## Code
+
 Tip: the code of this repository is my personal implementation, if there is an inaccurate place please contact me, welcome to discuss with each other. The FL code of this repository is based on this [repository](https://github.com/wenzhu23333/Federated-Learning) .I hope you like it and support it. Welcome to submit PR to improve the  repository.
 
 Note that in order to ensure that each client is selected a fixed number of times (to compute privacy budget each time the client is selected), this code uses round-robin client selection, which means that each client is selected sequentially.
@@ -42,6 +43,7 @@ bash run.sh
 ```
 
 Drawing code: 
+
 ```shell
 python3 draw.py
 ```
@@ -58,12 +60,12 @@ python3 draw.py
 
 ![Mnist](mnist_gaussian_laplace.png)
 
-
 ### No DP
 
 ```shell
 python main.py --dataset mnist --model cnn --dp_mechanism no_dp
 ```
+
 ### Gaussian Mechanism
 
 #### Simple Composition
@@ -83,6 +85,7 @@ We use [Tensorflow Privacy](https://github.com/tensorflow/privacy) to calculate 
 ```shell
 python main.py --dataset mnist --model cnn --dp_mechanism MA --dp_epsilon 10 --dp_delta 1e-5 --dp_clip 10 --dp_sample 0.01
 ```
+
 See the paper for detailed mechanism. 
 
 Abadi, Martin, et al. "Deep learning with differential privacy." *Proceedings of the 2016 ACM SIGSAC conference on computer and communications security*. 2016.
@@ -94,7 +97,6 @@ Based on Simple Composition in DP.
 ```shell
 python main.py --dataset mnist --model cnn --dp_mechanism Laplace --dp_epsilon 30 --dp_clip 50
 ```
-
 
 ## Papers
 
@@ -142,7 +144,33 @@ Consider citing following papers:
 
 [1] [W. Yang et al., "Gain Without Pain: Offsetting DP-Injected Noises Stealthily in Cross-Device Federated Learning," in IEEE Internet of Things Journal, vol. 9, no. 22, pp. 22147-22157, 15 Nov. 15, 2022, doi: 10.1109/JIOT.2021.3102030](https://ieeexplore.ieee.org/document/9504601)
 
+```latex
+ @ARTICLE{9504601,
+  author={Yang, Wenzhuo and Zhou, Yipeng and Hu, Miao and Wu, Di and Zheng, Xi and Wang, Jessie Hui and Guo, Song and Li, Chao},
+  journal={IEEE Internet of Things Journal}, 
+  title={Gain Without Pain: Offsetting DP-Injected Noises Stealthily in Cross-Device Federated Learning}, 
+  year={2022},
+  volume={9},
+  number={22},
+  pages={22147-22157},
+  keywords={Privacy;Internet of Things;Training;Distortion;Computational modeling;Machine learning;Differential privacy;Differential privacy (DP);federated learning (FL);secretly offsetting},
+  doi={10.1109/JIOT.2021.3102030}}
+```
+
 [2] [M. Hu et al., "AutoFL: A Bayesian Game Approach for Autonomous Client Participation in Federated Edge Learning," in IEEE Transactions on Mobile Computing, doi: 10.1109/TMC.2022.3227014](https://ieeexplore.ieee.org/document/9971780)
+
+```latex
+@ARTICLE{9971780,
+  author={Hu, Miao and Yang, Wenzhuo and Luo, Zhenxiao and Liu, Xuezheng and Zhou, Yipeng and Chen, Xu and Wu, Di},
+  journal={IEEE Transactions on Mobile Computing}, 
+  title={AutoFL: A Bayesian Game Approach for Autonomous Client Participation in Federated Edge Learning}, 
+  year={2024},
+  volume={23},
+  number={1},
+  pages={194-208},
+  keywords={Training;Games;Costs;Computational modeling;Servers;Bayes methods;Task analysis;Bayesian game;client participation;federated edge learning;incomplete information},
+  doi={10.1109/TMC.2022.3227014}}
+```
 
 [3] [Y. Zhou et al., "Optimizing the Numbers of Queries and Replies in Convex Federated Learning with Differential Privacy," in IEEE Transactions on Dependable and Secure Computing, vol. 20, no. 6, pp. 4823-4837, Nov. 1, 2023, doi: 10.1109/TDSC.2023.3234599](https://ieeexplore.ieee.org/document/10008087)
 

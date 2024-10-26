@@ -39,12 +39,14 @@
 实验环境：MNIST、高斯机制（Simple合成定理、Moment Account机制）、拉普拉斯机制。
 
 实验命令: 
+
 ```shell
 pip3 install -r requirements.txt
 bash run.sh
 ```
 
 绘图命令: 
+
 ```shell
 python3 draw.py
 ```
@@ -66,6 +68,7 @@ python3 draw.py
 ```shell
 python main.py --dataset mnist --iid --model cnn --epochs 50 --dp_mechanism no_dp
 ```
+
 ### 高斯机制
 
 #### Simple合成定理
@@ -85,6 +88,7 @@ python main.py --dataset mnist --model cnn --epochs 50 --dp_mechanism Gaussian -
 ```shell
 python main.py --dataset mnist --model cnn --dp_mechanism MA --dp_epsilon 10 --dp_delta 1e-5 --dp_clip 10 --dp_sample 0.01
 ```
+
 以下论文可以提供更多信息。
 
 Abadi, Martin, et al. "Deep learning with differential privacy." *Proceedings of the 2016 ACM SIGSAC conference on computer and communications security*. 2016.
@@ -140,9 +144,35 @@ Dev分支目前还在完善中，里面实现了包括MA、F-DP、以及Shuffle�
 
 考虑引用以下文章：
 
-[1] W. Yang et al., "Gain Without Pain: Offsetting DP-Injected Noises Stealthily in Cross-Device Federated Learning," in IEEE Internet of Things Journal, vol. 9, no. 22, pp. 22147-22157, 15 Nov.15, 2022, doi: 10.1109/JIOT.2021.3102030.
+[1] [W. Yang et al., "Gain Without Pain: Offsetting DP-Injected Noises Stealthily in Cross-Device Federated Learning," in IEEE Internet of Things Journal, vol. 9, no. 22, pp. 22147-22157, 15 Nov. 15, 2022, doi: 10.1109/JIOT.2021.3102030](https://ieeexplore.ieee.org/document/9504601)
 
-[2] M. Hu et al., "AutoFL: A Bayesian Game Approach for Autonomous Client Participation in Federated Edge Learning," in IEEE Transactions on Mobile Computing, doi: 10.1109/TMC.2022.3227014.
+```latex
+ @ARTICLE{9504601,
+  author={Yang, Wenzhuo and Zhou, Yipeng and Hu, Miao and Wu, Di and Zheng, Xi and Wang, Jessie Hui and Guo, Song and Li, Chao},
+  journal={IEEE Internet of Things Journal}, 
+  title={Gain Without Pain: Offsetting DP-Injected Noises Stealthily in Cross-Device Federated Learning}, 
+  year={2022},
+  volume={9},
+  number={22},
+  pages={22147-22157},
+  keywords={Privacy;Internet of Things;Training;Distortion;Computational modeling;Machine learning;Differential privacy;Differential privacy (DP);federated learning (FL);secretly offsetting},
+  doi={10.1109/JIOT.2021.3102030}}
+```
+
+[2] [M. Hu et al., "AutoFL: A Bayesian Game Approach for Autonomous Client Participation in Federated Edge Learning," in IEEE Transactions on Mobile Computing, doi: 10.1109/TMC.2022.3227014](https://ieeexplore.ieee.org/document/9971780)
+
+```latex
+@ARTICLE{9971780,
+  author={Hu, Miao and Yang, Wenzhuo and Luo, Zhenxiao and Liu, Xuezheng and Zhou, Yipeng and Chen, Xu and Wu, Di},
+  journal={IEEE Transactions on Mobile Computing}, 
+  title={AutoFL: A Bayesian Game Approach for Autonomous Client Participation in Federated Edge Learning}, 
+  year={2024},
+  volume={23},
+  number={1},
+  pages={194-208},
+  keywords={Training;Games;Costs;Computational modeling;Servers;Bayes methods;Task analysis;Bayesian game;client participation;federated edge learning;incomplete information},
+  doi={10.1109/TMC.2022.3227014}}
+```
 
 [3] Y. Zhou et al., "Optimizing the Numbers of Queries and Replies in Convex Federated Learning with Differential Privacy," in IEEE Transactions on Dependable and Secure Computing, doi: 10.1109/TDSC.2023.3234599.
 
